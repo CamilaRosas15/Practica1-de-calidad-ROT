@@ -1,6 +1,6 @@
 import { FormProvider, useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardBody, CardHeader, Divider, DatePicker, Select, SelectItem, Textarea, Input } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Divider, DatePicker, Select, SelectItem, Textarea, Input } from "@heroui/react";
 import { parseDate, today, getLocalTimeZone } from "@internationalized/date";
 import { useState } from "react";
 import { toast } from "sonner";

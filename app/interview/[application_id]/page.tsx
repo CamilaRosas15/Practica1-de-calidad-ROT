@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import useSWR from "swr";
-import { Spacer } from "@nextui-org/react";
+import { Spacer } from "@heroui/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import mixpanel from "mixpanel-browser";

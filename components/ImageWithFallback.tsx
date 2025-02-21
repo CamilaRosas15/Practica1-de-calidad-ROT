@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ImageProps, Image, cn } from "@nextui-org/react";
+import { ImageProps, Image, cn } from "@heroui/react";
 
 import { extractDomain } from "@/lib/extractDomain";
 

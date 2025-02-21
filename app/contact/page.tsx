@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardHeader, CardBody, Textarea, Select, SelectItem } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Textarea, Select, SelectItem } from "@heroui/react";
 import { useForm, Controller, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";

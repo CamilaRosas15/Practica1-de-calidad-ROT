@@ -1,4 +1,4 @@
-import { DropdownTrigger, Dropdown, DropdownItem, DropdownMenu, Selection } from "@nextui-org/react";
+import { DropdownTrigger, Dropdown, DropdownItem, DropdownMenu, Selection } from "@heroui/react";
 import useSWR from "swr";
 import { useQueryState, parseAsStringLiteral } from "nuqs";
 import { useRouter } from "next/navigation";

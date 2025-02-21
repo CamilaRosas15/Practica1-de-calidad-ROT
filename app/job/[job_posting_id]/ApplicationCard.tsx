@@ -1,4 +1,4 @@
-import { Card, CardHeader, Avatar } from "@nextui-org/react";
+import { Card, CardHeader, Avatar } from "@heroui/react";
 import { motion } from "framer-motion";
 
 import { formatHowLongAgo } from "@/lib/formatDateUtils";

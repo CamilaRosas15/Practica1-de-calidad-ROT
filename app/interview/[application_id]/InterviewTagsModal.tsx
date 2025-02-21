@@ -1,4 +1,4 @@
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Checkbox } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Checkbox } from "@heroui/react";
 import { useState } from "react";
 
 import { INTERVIEW_TAGS } from "@/lib/schema/updateInterviewRoundSchema";

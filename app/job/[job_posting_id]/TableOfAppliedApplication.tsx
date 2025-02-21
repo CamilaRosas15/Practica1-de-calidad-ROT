@@ -1,5 +1,5 @@
 import React from "react";
-import { DropdownTrigger, Dropdown, DropdownMenu, DropdownItem, Pagination, Selection, ChipProps } from "@nextui-org/react";
+import { DropdownTrigger, Dropdown, DropdownMenu, DropdownItem, Pagination, Selection, ChipProps } from "@heroui/react";
 import { parseDate } from "@internationalized/date";
 import { parseAsStringLiteral, parseAsArrayOf, useQueryStates, parseAsInteger } from "nuqs";
 import mixpanel from "mixpanel-browser";

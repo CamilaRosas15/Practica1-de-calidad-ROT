@@ -2,7 +2,7 @@
 
 import { useParams, usePathname, useRouter } from "next/navigation";
 import useSWR from "swr";
-import { Card, CardBody, CardHeader, Divider, LinkIcon, Link, useDisclosure, Tab, Tabs } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Divider, LinkIcon, Link, useDisclosure, Tab, Tabs } from "@heroui/react";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { Key } from "react";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";

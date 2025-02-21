@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import useSWR from "swr";
-import { Card, CardHeader, CardBody, Link } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Link } from "@heroui/react";
 import mixpanel from "mixpanel-browser";
 
 import { fetcher } from "@/lib/fetcher";

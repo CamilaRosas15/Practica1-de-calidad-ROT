@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import { Input } from "@nextui-org/react";
+import { Input } from "@heroui/react";
 
 import { JobPostingCard } from "./JobPostingCard";
 

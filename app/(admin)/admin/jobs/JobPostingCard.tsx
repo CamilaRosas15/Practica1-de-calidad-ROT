@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Card, Modal, ModalContent } from "@nextui-org/react";
+import { Card, Modal, ModalContent } from "@heroui/react";
 import Link from "next/link";
 
 import { JobPostingEditForm } from "./JobPostingEditForm";

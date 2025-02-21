@@ -1,6 +1,6 @@
 "use client";
 
-import { Switch, Tooltip } from "@nextui-org/react";
+import { Switch, Tooltip } from "@heroui/react";
 import { useState } from "react";
 import mixpanel from "mixpanel-browser";
 

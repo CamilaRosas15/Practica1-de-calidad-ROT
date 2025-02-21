@@ -1,6 +1,6 @@
 "use client";
 
-import { Link } from "@nextui-org/react";
+import { Link } from "@heroui/react";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import mixpanel from "mixpanel-browser";

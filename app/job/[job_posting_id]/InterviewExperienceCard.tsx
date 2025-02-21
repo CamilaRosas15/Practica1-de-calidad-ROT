@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Avatar, Tooltip } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Avatar, Tooltip } from "@heroui/react";
 
 import { InterviewTagsAndLeetcodeChips } from "./InterviewTagsAndLeetcodeChips";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm, Controller } from "react-hook-form";
-import { Input, Select, ModalHeader, ModalBody, ModalFooter, SelectItem, DatePicker, cn } from "@nextui-org/react";
+import { Input, Select, ModalHeader, ModalBody, ModalFooter, SelectItem, DatePicker, cn } from "@heroui/react";
 import { toast } from "sonner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { parseDate, getLocalTimeZone, today } from "@internationalized/date";

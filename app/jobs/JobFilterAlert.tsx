@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@nextui-org/react";
-import { Alert } from "@nextui-org/alert";
+import { Button } from "@heroui/react";
+import { Alert } from "@heroui/alert";
 import { usePathname, useRouter } from "next/navigation";
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { parseAsArrayOf, parseAsString, useQueryStates } from "nuqs";

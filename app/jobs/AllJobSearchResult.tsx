@@ -2,7 +2,7 @@
 
 import React from "react";
 import useSWR from "swr";
-import { Pagination, Card, CardBody, Link } from "@nextui-org/react";
+import { Pagination, Card, CardBody, Link } from "@heroui/react";
 import { parseAsInteger, parseAsString, parseAsBoolean, parseAsArrayOf, parseAsStringLiteral, useQueryStates } from "nuqs";
 import mixpanel from "mixpanel-browser";
 

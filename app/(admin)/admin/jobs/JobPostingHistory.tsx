@@ -1,7 +1,7 @@
 "use client";
 
 import useSWR from "swr";
-import { Card, ScrollShadow } from "@nextui-org/react";
+import { Card, ScrollShadow } from "@heroui/react";
 import { format } from "date-fns";
 
 import { API } from "@/lib/constants/apiRoutes";

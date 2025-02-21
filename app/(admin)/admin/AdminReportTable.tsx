@@ -2,7 +2,7 @@
 
 import { Key, useCallback } from "react";
 import useSWR from "swr";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User } from "@heroui/react";
 
 import { fetcher } from "@/lib/fetcher";
 import { API } from "@/lib/constants/apiRoutes";

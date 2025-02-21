@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardBody, Avatar, Textarea } from "@nextui-org/react";
+import { Card, CardBody, Avatar, Textarea } from "@heroui/react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";

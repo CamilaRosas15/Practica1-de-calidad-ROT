@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Divider, Tooltip } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, Divider, Tooltip } from "@heroui/react";
 
 import { InterviewExperienceCardData } from "@/lib/sharedTypes";
 import { InterviewExperienceCard } from "@/app/job/[job_posting_id]/InterviewExperienceCard";

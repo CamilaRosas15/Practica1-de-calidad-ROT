@@ -1,4 +1,4 @@
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, SelectItem, Select } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, SelectItem, Select } from "@heroui/react";
 import { useState } from "react";
 
 import { CountryFilter } from "./CountryFilter";

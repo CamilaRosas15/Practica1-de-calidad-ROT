@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, cn, Link } from "@nextui-org/react";
+import { Card, CardBody, CardHeader, cn, Link } from "@heroui/react";
 import mixpanel from "mixpanel-browser";
 
 import { AlertCircleIcon } from "./icons";

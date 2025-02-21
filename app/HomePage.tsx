@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardBody, Tabs, Tab, AccordionItem, Accordion, Link, Spinner, Skeleton } from "@nextui-org/react";
+import { Card, CardBody, Tabs, Tab, AccordionItem, Accordion, Link, Spinner, Skeleton } from "@heroui/react";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import mixpanel from "mixpanel-browser";
