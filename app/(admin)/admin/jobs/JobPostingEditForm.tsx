@@ -107,11 +107,7 @@ export function JobPostingEditForm({
                 }}
                 onSelectionChange={(keys) => field.onChange(Array.from(keys))}
               >
-                {(country) => (
-                  <SelectItem key={country.id} value={country.id}>
-                    {country.country_name}
-                  </SelectItem>
-                )}
+                {(country) => <SelectItem key={country.id}>{country.country_name}</SelectItem>}
               </Select>
             )}
           />
@@ -132,11 +128,7 @@ export function JobPostingEditForm({
                 })}
                 onSelectionChange={(keys) => field.onChange(Array.from(keys))}
               >
-                {(level) => (
-                  <SelectItem key={level.id} value={level.id}>
-                    {level.experience_level}
-                  </SelectItem>
-                )}
+                {(level) => <SelectItem key={level.id}>{level.experience_level}</SelectItem>}
               </Select>
             )}
           />
@@ -157,11 +149,7 @@ export function JobPostingEditForm({
                 })}
                 onSelectionChange={(keys) => field.onChange(Array.from(keys))}
               >
-                {(category) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.job_category_name}
-                  </SelectItem>
-                )}
+                {(category) => <SelectItem key={category.id}>{category.job_category_name}</SelectItem>}
               </Select>
             )}
           />
@@ -217,9 +205,7 @@ export function JobPostingEditForm({
                 onChange={field.onChange}
               >
                 {Object.values(JOB_STATUS).map((status) => (
-                  <SelectItem key={status} value={status}>
-                    {status}
-                  </SelectItem>
+                  <SelectItem key={status}>{status}</SelectItem>
                 ))}
               </Select>
             )}

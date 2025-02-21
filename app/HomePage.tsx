@@ -4,9 +4,8 @@ import { Card, CardBody, Tabs, Tab, AccordionItem, Accordion, Link, Spinner, Ske
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import mixpanel from "mixpanel-browser";
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-import { Key } from "@react-types/shared";
 
 import { CustomButton } from "@/components/CustomButton";
 import { useIsMobile } from "@/lib/hooks/useIsMobile";
@@ -267,7 +266,7 @@ export function HomePage() {
   const { theme } = useTheme();
   const isMobile = useIsMobile();
 
-  const [selectedTab, setSelectedTab] = useState<Key>("Track Applications");
+  const [selectedTab, setSelectedTab] = useState<string>("Track Applications");
 
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
 
@@ -279,8 +278,8 @@ export function HomePage() {
     mixpanel.track("Find Companies Button Clicked home hero section");
   };
 
-  const handleTabChange = (tabName: Key) => {
-    setSelectedTab(tabName);
+  const handleTabChange = (tabName: React.Key) => {
+    setSelectedTab(String(tabName));
     mixpanel.track("Home Page Features Tab Changed", {
       action: "changed",
       tab: tabName,

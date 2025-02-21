@@ -20,11 +20,7 @@ export function JobCategoryFilter({ onJobCategoryChange, selectedJobCategoryName
         onJobCategoryChange(Array.from(keys) as JobCategoryName[]);
       }}
     >
-      {(category) => (
-        <SelectItem key={category.name} value={category.name}>
-          {category.name}
-        </SelectItem>
-      )}
+      {(category) => <SelectItem key={category.name}>{category.name}</SelectItem>}
     </Select>
   );
 }

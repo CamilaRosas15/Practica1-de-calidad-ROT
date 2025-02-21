@@ -20,11 +20,7 @@ export function ExperienceLevelFilter({ onExperienceLevelChange, selectedExperie
         onExperienceLevelChange(Array.from(keys) as ExperienceLevel[]);
       }}
     >
-      {(level) => (
-        <SelectItem key={level.name} value={level.name}>
-          {level.name}
-        </SelectItem>
-      )}
+      {(level) => <SelectItem key={level.name}>{level.name}</SelectItem>}
     </Select>
   );
 }

@@ -8,7 +8,7 @@ import { fontSans } from "@/config/fonts";
 import { ClerkSWRToastProvider } from "@/components/ClerkSWRToastProvider";
 import { MixpanelProvider } from "@/components/MixpanelProvider";
 import { MainLayout } from "@/components/MainLayout";
-import { NextUIProviders } from "@/components/NextUIProviders";
+import { HeroUIProviders } from "@/components/HeroUIProviders";
 
 export const metadata: Metadata = {
   title: {
@@ -46,7 +46,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html suppressHydrationWarning lang="en">
       <head />
       <body className={clsx("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
-        <NextUIProviders themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+        <HeroUIProviders themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <ClerkSWRToastProvider>
             <NuqsAdapter>
               <MixpanelProvider>
@@ -54,7 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </MixpanelProvider>
             </NuqsAdapter>
           </ClerkSWRToastProvider>
-        </NextUIProviders>
+        </HeroUIProviders>
       </body>
     </html>
   );

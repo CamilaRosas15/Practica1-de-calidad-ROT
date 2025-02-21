@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { Input, Pagination, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import useSWR from "swr";
 import { usePathname } from "next/navigation";
@@ -30,7 +30,7 @@ const sortOptions = [
 
 type SortOption = (typeof sortOptions)[number];
 
-export function TableCompany() {
+export function TableCompanyContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const pathname = usePathname();
   const { data: companies = [], isLoading, error } = useSWR<GetAllCompaniesResponse[]>(API.COMPANY.getAll, fetcher);
@@ -295,5 +295,13 @@ export function TableCompany() {
         <CreateCompanyModal isOpen={isModalOpen} onClose={handleModalClose} />
       </div>
     </>
+  );
+}
+
+export function TableCompany() {
+  return (
+    <Suspense fallback={<LoadingContent />}>
+      <TableCompanyContent />
+    </Suspense>
   );
 }

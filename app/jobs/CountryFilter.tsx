@@ -21,11 +21,7 @@ export function CountryFilter({ onCountriesChange, selectedCountries, availableC
       selectionMode="multiple"
       onSelectionChange={(keys) => onCountriesChange(Array.from(keys) as string[])}
     >
-      {(country) => (
-        <SelectItem key={country.name} value={country.name}>
-          {country.name}
-        </SelectItem>
-      )}
+      {(country) => <SelectItem key={country.name}>{country.name}</SelectItem>}
     </Select>
   );
 }

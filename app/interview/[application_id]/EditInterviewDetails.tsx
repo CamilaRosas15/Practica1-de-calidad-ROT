@@ -178,9 +178,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
                     }}
                   >
                     {Object.values(APPLICATION_STATUS).map((value) => (
-                      <SelectItem key={value} value={value}>
-                        {value}
-                      </SelectItem>
+                      <SelectItem key={value}>{value}</SelectItem>
                     ))}
                   </Select>
                 )}

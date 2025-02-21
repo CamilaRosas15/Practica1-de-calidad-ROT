@@ -109,11 +109,7 @@ export default function SettingsPage() {
                   selectionMode="multiple"
                   onSelectionChange={(keys) => field.onChange(Array.from(keys))}
                 >
-                  {(country) => (
-                    <SelectItem key={country.name} value={country.name}>
-                      {country.name}
-                    </SelectItem>
-                  )}
+                  {(country) => <SelectItem key={country.name}>{country.name}</SelectItem>}
                 </Select>
               )}
             />
@@ -132,11 +128,7 @@ export default function SettingsPage() {
                   selectionMode="multiple"
                   onSelectionChange={(keys) => field.onChange(Array.from(keys))}
                 >
-                  {(level) => (
-                    <SelectItem key={level.name} value={level.name}>
-                      {level.name}
-                    </SelectItem>
-                  )}
+                  {(level) => <SelectItem key={level.name}>{level.name}</SelectItem>}
                 </Select>
               )}
             />
@@ -155,11 +147,7 @@ export default function SettingsPage() {
                   selectionMode="multiple"
                   onSelectionChange={(keys) => field.onChange(Array.from(keys))}
                 >
-                  {(category) => (
-                    <SelectItem key={category.name} value={category.name}>
-                      {category.name}
-                    </SelectItem>
-                  )}
+                  {(category) => <SelectItem key={category.name}>{category.name}</SelectItem>}
                 </Select>
               )}
             />
@@ -188,11 +176,7 @@ export default function SettingsPage() {
                   selectionMode="multiple"
                   onSelectionChange={(keys) => field.onChange(Array.from(keys))}
                 >
-                  {(country) => (
-                    <SelectItem key={country.name} value={country.name}>
-                      {country.name}
-                    </SelectItem>
-                  )}
+                  {(country) => <SelectItem key={country.name}>{country.name}</SelectItem>}
                 </Select>
               )}
             />
@@ -211,11 +195,7 @@ export default function SettingsPage() {
                   selectionMode="single"
                   onSelectionChange={(keys) => field.onChange(Array.from(keys))}
                 >
-                  {(level) => (
-                    <SelectItem key={level.name} value={level.name}>
-                      {level.name}
-                    </SelectItem>
-                  )}
+                  {(level) => <SelectItem key={level.name}>{level.name}</SelectItem>}
                 </Select>
               )}
             />
@@ -234,11 +214,7 @@ export default function SettingsPage() {
                   selectionMode="single"
                   onSelectionChange={(keys) => field.onChange(Array.from(keys))}
                 >
-                  {(category) => (
-                    <SelectItem key={category.name} value={category.name}>
-                      {category.name}
-                    </SelectItem>
-                  )}
+                  {(category) => <SelectItem key={category.name}>{category.name}</SelectItem>}
                 </Select>
               )}
             />

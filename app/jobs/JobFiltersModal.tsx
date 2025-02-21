@@ -110,11 +110,7 @@ export function JobFiltersModal({
                     setTempSortOrder(selectedKey);
                   }}
                 >
-                  {(option) => (
-                    <SelectItem key={option.key} value={option.key}>
-                      {option.label}
-                    </SelectItem>
-                  )}
+                  {(option) => <SelectItem key={option.key}>{option.label}</SelectItem>}
                 </Select>
               </div>
 
