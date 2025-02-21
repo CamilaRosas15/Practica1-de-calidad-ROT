@@ -2,7 +2,7 @@
 
 import NextLink from "next/link";
 import clsx from "clsx";
-import { Link, Navbar as NextUINavbar, NavbarContent, NavbarMenu, NavbarItem, NavbarMenuItem, NavbarMenuToggle } from "@heroui/react";
+import { Link, Navbar as HeroUINavbar, NavbarContent, NavbarMenu, NavbarItem, NavbarMenuItem, NavbarMenuToggle } from "@heroui/react";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -45,7 +45,7 @@ export const Navbar = () => {
   };
 
   return (
-    <NextUINavbar
+    <HeroUINavbar
       isMenuOpen={isMenuOpen}
       maxWidth="xl"
       position="sticky"
@@ -138,6 +138,6 @@ export const Navbar = () => {
           </SignedIn>
         </NavbarItem>
       </NavbarContent>
-    </NextUINavbar>
+    </HeroUINavbar>
   );
 };

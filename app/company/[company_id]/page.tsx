@@ -108,6 +108,7 @@ export default function CompanyDetailsPage() {
         countries: data.countries,
         experience_level_names: data.experience_level_names,
         job_category_names: data.job_category_names,
+        job_url: data.url,
       });
       toast.success("Job added successfully");
 
@@ -128,6 +129,7 @@ export default function CompanyDetailsPage() {
         countries: data.countries,
         experience_level_names: data.experience_level_names,
         job_category_names: data.job_category_names,
+        job_url: data.url,
         error: err instanceof Error ? err.message : "Unknown error occurred",
       });
       toast.error("Error adding job");

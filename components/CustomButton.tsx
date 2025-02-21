@@ -1,6 +1,6 @@
-import { extendVariants, Button as NextUIButton } from "@heroui/react";
+import { extendVariants, Button as HeroUIButton } from "@heroui/react";
 
-export const CustomButton = extendVariants(NextUIButton, {
+export const CustomButton = extendVariants(HeroUIButton, {
   variants: {
     variant: {
       flat: null, // Register flat variant

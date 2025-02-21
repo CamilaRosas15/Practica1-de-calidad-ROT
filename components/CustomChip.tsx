@@ -1,6 +1,6 @@
-import { extendVariants, Chip as NextUIChip } from "@heroui/react";
+import { extendVariants, Chip as HeroUIChip } from "@heroui/react";
 
-export const CustomChip = extendVariants(NextUIChip, {
+export const CustomChip = extendVariants(HeroUIChip, {
   variants: {
     variant: {
       flat: {}, // Register flat variant
