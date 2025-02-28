@@ -22,6 +22,7 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
       debug: process.env.NODE_ENV === "development",
       track_pageview: "url-with-path",
       persistence: "localStorage",
+      record_sessions_percent: Number(process.env.NEXT_PUBLIC_MIXPANEL_RECORD_SESSIONS_PERCENT ?? 1),
     });
   }, []);
 

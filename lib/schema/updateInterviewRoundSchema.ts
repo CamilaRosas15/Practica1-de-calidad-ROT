@@ -5,7 +5,7 @@ import { APPLICATION_STATUS } from "@/lib/constants/applicationStatus";
 
 export const INTERVIEW_TAGS = ["Online Assessment", "HR/Recruiter", "Technical", "Behavioral", "Hiring Manager", "Final Round"] as const satisfies readonly InterviewTag[];
 
-const MAX_LEETCODE_QUESTION_NUMBER = parseInt(process.env.NEXT_PUBLIC_MAX_LEETCODE_QUESTION_NUMBER || "3000");
+const MAX_LEETCODE_QUESTION_NUMBER = parseInt(process.env.NEXT_PUBLIC_MAX_LEETCODE_QUESTION_NUMBER ?? "3000", 10);
 
 // Add new LeetCode question schema
 const leetCodeQuestionSchema = z.object({

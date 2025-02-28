@@ -79,7 +79,7 @@ export function CreateCompanyModal({ isOpen, onClose }: CreateCompanyModalProps)
   return (
     <Modal isOpen={isOpen} placement="center" onClose={onClose}>
       <ModalContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form noValidate onSubmit={handleSubmit(onSubmit)}>
           <ModalHeader>Add New Company</ModalHeader>
           <ModalBody>
             <Input {...register("company_name")} isClearable isRequired errorMessage={errors.company_name?.message} isInvalid={!!errors.company_name} label="Enter Company Name" />

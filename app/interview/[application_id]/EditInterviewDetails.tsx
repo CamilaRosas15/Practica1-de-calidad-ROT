@@ -144,7 +144,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
 
   return (
     <FormProvider {...methods}>
-      <form id={INTERVIEW_FORM_ID} onSubmit={handleFormSubmit}>
+      <form noValidate id={INTERVIEW_FORM_ID} onSubmit={handleFormSubmit}>
         <Card>
           <CardHeader>
             <div className="flex items-center gap-3">
