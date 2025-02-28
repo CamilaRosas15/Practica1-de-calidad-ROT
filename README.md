@@ -10,7 +10,15 @@ See a job listing (e.g., on LinkedIn), apply for it, and haven’t heard back? U
 - **Has anyone heard back from this role?**  
 - **What are the online assessments/interview rounds like?**  
 - **When do company X usually hire?**  
-- **And lastly, did they ghost me?**  
+- **And lastly, did they ghost me?**
+
+<img width="95.5%" alt="dtgm home" src="https://github.com/user-attachments/assets/1f5ce3ce-a499-4b9e-ac99-e5a067cd1061" />
+
+<p>
+  <img src="https://github.com/user-attachments/assets/42eeca7a-734c-4b26-9da3-f98f882fa7d9" alt="dtgm app" width="46%" />
+  <img src="https://github.com/user-attachments/assets/2b65585c-5b17-4eef-b48e-cd2a197e0dd6" alt="dtgm OA" width="49%" />
+</p>
+
 
 ## Key Features
 
