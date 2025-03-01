@@ -3,10 +3,8 @@
 import React from "react";
 import useSWR from "swr";
 import { Pagination, Card, CardBody, Link } from "@heroui/react";
-import { parseAsInteger, parseAsString, parseAsBoolean, parseAsArrayOf, parseAsStringLiteral, useQueryStates } from "nuqs";
+import { useQueryStates } from "nuqs";
 import mixpanel from "mixpanel-browser";
-
-import { SORT_ORDER_OPTIONS } from "./AllJobSearchInput";
 
 import { AllJobsPageResponse } from "@/app/api/job/route";
 import { fetcher } from "@/lib/fetcher";
@@ -20,6 +18,7 @@ import { RateLimitErrorMessage } from "@/components/RateLimitErrorMessage";
 import { LoadingContent } from "@/components/LoadingContent";
 import { ErrorMessageContent } from "@/components/ErrorMessageContent";
 import { CustomChip } from "@/components/CustomChip";
+import { nuqsJobSearchParamSchema } from "@/lib/schema/nuqsJobSearchParamSchema";
 
 export type AllJobsPageDataSelect = Pick<JobPostingTable, "id" | "title" | "updated_at" | "job_posted_date" | "closed_date"> & {
   [DBTable.COMPANY]: Pick<CompanyTable, "company_name" | "logo_url">;
@@ -38,15 +37,7 @@ const DEFAULT_RESPONSE: AllJobsPageResponse = {
 };
 
 export function AllJobSearchResult() {
-  const [{ page, search, isVerified, countries, sortOrder, experienceLevelNames, jobCategoryNames }, setQueryStates] = useQueryStates({
-    page: parseAsInteger.withDefault(1),
-    search: parseAsString.withDefault(""),
-    isVerified: parseAsBoolean.withDefault(false),
-    countries: parseAsArrayOf(parseAsString).withDefault([]),
-    sortOrder: parseAsStringLiteral(Object.values(SORT_ORDER_OPTIONS)).withDefault("DESC"),
-    experienceLevelNames: parseAsArrayOf(parseAsString).withDefault([]),
-    jobCategoryNames: parseAsArrayOf(parseAsString).withDefault([]),
-  });
+  const [{ page, search, isVerified, countries, sortOrder, experienceLevelNames, jobCategoryNames }, setQueryStates] = useQueryStates(nuqsJobSearchParamSchema);
 
   const debouncedSearch = useDebounce(search);
 

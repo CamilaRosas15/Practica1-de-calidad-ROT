@@ -1,3 +1,5 @@
+export const COUNTRY_PARAM_SEPARATOR = "|";
+
 export const API = {
   COMPANY: {
     getAll: "/api/company",
@@ -24,7 +26,7 @@ export const API = {
       `/api/job?page=${page}` +
       `&search=${encodeURIComponent(search)}` +
       `&isVerified=${isVerified}` +
-      `&countries=${selectedCountries}` +
+      `&countries=${selectedCountries.map((countryName) => encodeURIComponent(countryName)).join(COUNTRY_PARAM_SEPARATOR)}` +
       `&sortOrder=${sortOrder}` +
       `&experienceLevelNames=${experienceLevelNames}` +
       `&jobCategoryNames=${jobCategoryNames}`,

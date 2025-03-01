@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 
+import { nuqsJobSearchParamLoader } from "@/lib/schema/nuqsJobSearchParamSchema";
 import { createClerkSupabaseClientSsr } from "@/lib/supabase";
 import { AllJobsPageData } from "@/app/jobs/AllJobSearchResult";
 import { DB_RPC } from "@/lib/constants/apiRoutes";
@@ -13,21 +14,8 @@ export type AllJobsPageResponse = {
 export async function GET(request: NextRequest) {
   const { userId } = auth();
 
-  const searchParams = request.nextUrl.searchParams;
-  const page = parseInt(searchParams.get("page") ?? "1", 10);
-  const search = searchParams.get("search") ?? "";
-  const isVerified = searchParams.get("isVerified") === "true";
-  const sortOrder = (searchParams.get("sortOrder") ?? "DESC") as "ASC" | "DESC";
-
-  // Fix: Split any comma-separated values into separate array elements
-  const countriesParam = searchParams.get("countries");
-  const countries = countriesParam ? countriesParam.split(",").filter(Boolean) : null;
-
-  const experienceLevelNamesParam = searchParams.get("experienceLevelNames");
-  const experienceLevelNames = experienceLevelNamesParam ? experienceLevelNamesParam.split(",").filter(Boolean) : null;
-
-  const jobCategoryNamesParam = searchParams.get("jobCategoryNames");
-  const jobCategoryNames = jobCategoryNamesParam ? jobCategoryNamesParam.split(",").filter(Boolean) : null;
+  // Parse search params from the request
+  const { page, search, isVerified, countries, sortOrder, experienceLevelNames, jobCategoryNames } = await nuqsJobSearchParamLoader(request);
 
   // console.warn("countries=", countries);
   // console.warn("experienceLevelNames=", experienceLevelNames);

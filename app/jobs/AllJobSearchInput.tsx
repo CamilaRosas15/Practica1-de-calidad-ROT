@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Input } from "@heroui/react";
-import { createParser, parseAsArrayOf, parseAsBoolean, parseAsInteger, parseAsString, parseAsStringLiteral, useQueryStates } from "nuqs";
+import { createParser, parseAsArrayOf, useQueryStates } from "nuqs";
 import useSWR from "swr";
 import mixpanel from "mixpanel-browser";
 
@@ -13,13 +13,7 @@ import { FilterIcon } from "@/components/icons";
 import { API } from "@/lib/constants/apiRoutes";
 import { fetcher } from "@/lib/fetcher";
 import { SettingsJobSearchResponse } from "@/app/api/(protected)/settings/job-search/route";
-
-export type JobSortOrderKey = "ASC" | "DESC";
-
-export const SORT_ORDER_OPTIONS = {
-  ASC: "DESC",
-  DESC: "ASC",
-} satisfies Record<JobSortOrderKey, JobSortOrderKey>;
+import { JobSortOrderKey, nuqsJobSearchParamSchema } from "@/lib/schema/nuqsJobSearchParamSchema";
 
 type AllJobSearchInputProps = {
   search: string;
@@ -69,10 +63,7 @@ export function AllJobSearchInput({ search, onSearchChange }: AllJobSearchInputP
   });
 
   const [{ isVerified, countries, sortOrder, experienceLevelNames, page, jobCategoryNames }, setQueryStates] = useQueryStates({
-    page: parseAsInteger.withDefault(1),
-    isVerified: parseAsBoolean.withDefault(false),
-    countries: parseAsArrayOf(parseAsString).withDefault([]),
-    sortOrder: parseAsStringLiteral(Object.values(SORT_ORDER_OPTIONS)).withDefault("DESC"),
+    ...nuqsJobSearchParamSchema, // Spread the general schema
     experienceLevelNames: parseAsArrayOf(parseAsExperienceLevel).withDefault([]),
     jobCategoryNames: parseAsArrayOf(parseAsJobCategory).withDefault([]),
   });

@@ -3,13 +3,14 @@
 import { Button, Alert } from "@heroui/react";
 import { usePathname, useRouter } from "next/navigation";
 import { SignInButton, useUser } from "@clerk/nextjs";
-import { parseAsArrayOf, parseAsString, useQueryStates } from "nuqs";
+import { useQueryStates } from "nuqs";
 import { toast } from "sonner";
 import mixpanel from "mixpanel-browser";
 import { Suspense } from "react";
 
 import { updateUserIsAwareOfDefaultFilter } from "@/app/actions/updateUserIsAwareOfDefaultFilter";
 import { LoadingContent } from "@/components/LoadingContent";
+import { nuqsJobSearchParamSchema } from "@/lib/schema/nuqsJobSearchParamSchema";
 
 type ButtonProps = {
   label: string;
@@ -103,11 +104,7 @@ export function JobFilterAlertContent() {
   const { user, isSignedIn, isLoaded } = useUser();
   const pathname = usePathname();
 
-  const [{ countries, experienceLevelNames, jobCategoryNames }] = useQueryStates({
-    countries: parseAsArrayOf(parseAsString).withDefault([]),
-    experienceLevelNames: parseAsArrayOf(parseAsString).withDefault([]),
-    jobCategoryNames: parseAsArrayOf(parseAsString).withDefault([]),
-  });
+  const [{ countries, experienceLevelNames, jobCategoryNames }] = useQueryStates(nuqsJobSearchParamSchema);
 
   const isEmptyOrDefaultFilter = checkIfEmptyOrDefaultFilter(countries, experienceLevelNames, jobCategoryNames);
 

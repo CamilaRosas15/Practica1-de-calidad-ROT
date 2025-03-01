@@ -3,11 +3,11 @@ import { useState } from "react";
 
 import { CountryFilter } from "./CountryFilter";
 import { VerifiedJobsToggle } from "./VerifiedJobsToggle";
-import { JobSortOrderKey } from "./AllJobSearchInput";
 import { ExperienceLevelFilter } from "./ExperienceLevelFilter";
 import { JobCategoryFilter } from "./JobCategoryFilter";
 
 import { CustomButton } from "@/components/CustomButton";
+import { JobSortOrderKey } from "@/lib/schema/nuqsJobSearchParamSchema";
 
 const sortOptions = [
   { key: "DESC", label: "Posted Date: Newest to Oldest" },
@@ -55,6 +55,9 @@ export function JobFiltersModal({
 
   const [tempCountries, setTempCountries] = useState(initialCountries);
   const [tempExperienceLevelNames, setTempExperienceLevelNames] = useState(initialExperienceLevelNames);
+
+  // console.warn("tempExperienceLevelNames", tempExperienceLevelNames, initialExperienceLevelNames);
+
   const [tempJobCategoryNames, setTempJobCategoryNames] = useState(initialJobCategoryNames);
 
   const handleClose = () => {
