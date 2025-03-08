@@ -7,16 +7,29 @@ import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import mixpanel from "mixpanel-browser";
+import useSWR from "swr";
 
 import { ClerkUserButton } from "./ClerkUserButton";
+import { GithubIcon } from "./icons";
 
 import { siteConfig } from "@/config/site";
-import { ThemeSwitch } from "@/components/theme-switch";
 import { CustomButton } from "@/components/CustomButton";
+import { fetcher } from "@/lib/fetcher";
+
+type GitHubRepoData = {
+  stargazers_count: number;
+};
 
 export const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const repoPath = siteConfig.githubRepoUrl.replace("https://github.com/", "");
+
+  const { data: githubData, isLoading: githubLoading } = useSWR<GitHubRepoData>(`https://api.github.com/repos/${repoPath}`, fetcher, {
+    revalidateOnFocus: false,
+    refreshInterval: 60000 * 10, // 10 minutes
+  });
 
   // Track menu toggle
   const handleMenuToggle = (isOpen: boolean) => {
@@ -41,6 +54,13 @@ export const Navbar = () => {
     mixpanel.track("Navbar", {
       action: "login_clicked",
       from_path: pathname,
+    });
+  };
+
+  // Track GitHub click
+  const handleGithubClick = () => {
+    mixpanel.track("Github Link Clicked", {
+      action: "navbar",
     });
   };
 
@@ -107,10 +127,12 @@ export const Navbar = () => {
 
       {/* Right side: Theme Switch + Login + Mobile Menu Toggle */}
       <NavbarContent className="gap-2 sm:hidden" justify="end">
-        <ThemeSwitch />
+        <Link isExternal className="flex items-center" href={siteConfig.githubRepoUrl} showAnchorIcon={false} onPress={handleGithubClick}>
+          <GithubIcon className="text-default-600 transition-colors hover:text-default-900" />
+        </Link>
         <SignedOut>
           <SignInButton fallbackRedirectUrl={pathname} mode="modal">
-            <CustomButton className="bg-[#282828] text-sm font-normal text-white" variant="flat" onClick={() => handleLoginClick()}>
+            <CustomButton className="bg-[#282828] text-sm font-normal text-white" variant="flat" onClick={handleLoginClick}>
               Login
             </CustomButton>
           </SignInButton>
@@ -122,13 +144,23 @@ export const Navbar = () => {
 
       {/* Desktop Right side */}
       <NavbarContent className="hidden basis-1/5 sm:flex sm:basis-auto" justify="end">
-        <NavbarItem className="hidden gap-2 sm:flex">
-          <ThemeSwitch />
+        <NavbarItem className="hidden sm:flex">
+          <Link
+            isExternal
+            className="flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-sm text-default-600 transition-all hover:border-default-500 dark:hover:border-default-700"
+            href={siteConfig.githubRepoUrl}
+            showAnchorIcon={false}
+            onPress={handleGithubClick}
+          >
+            <GithubIcon />
+            <span className="hidden md:inline"> {githubLoading ? "" : `${githubData?.stargazers_count ?? 0}`}</span>
+          </Link>
         </NavbarItem>
-        <NavbarItem className="hidden md:flex">
+
+        <NavbarItem className="hidden sm:flex">
           <SignedOut>
             <SignInButton fallbackRedirectUrl={pathname} mode="modal">
-              <CustomButton className="bg-[#282828] text-sm font-normal text-white" variant="flat" onClick={() => handleLoginClick()}>
+              <CustomButton className="bg-[#282828] text-sm font-normal text-white" variant="flat" onClick={handleLoginClick}>
                 Login
               </CustomButton>
             </SignInButton>

@@ -5,6 +5,9 @@ import mixpanel from "mixpanel-browser";
 import { Link } from "@heroui/react";
 
 import { Navbar } from "@/components/navbar";
+import { GithubIcon } from "@/components/icons";
+import { ThemeSwitch } from "@/components/theme-switch";
+import { siteConfig } from "@/config/site";
 
 const HIDE_LOGO_CREDIT_PATHS = [
   "/sign-in",
@@ -27,7 +30,9 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   );
 
   const handleGithubClick = () => {
-    mixpanel.track("Github Link Clicked");
+    mixpanel.track("Github Link Clicked", {
+      action: "footer",
+    });
   };
 
   return (
@@ -46,31 +51,17 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
       {/* Footer section */}
       <footer className="container mx-auto w-full max-w-7xl px-6 py-4">
-        <div className="text-center">
-          <Link
-            isExternal
-            className="flex items-center justify-center text-sm text-default-500 hover:text-default-800"
-            href="https://github.com/didtheyghostme/didtheyghostme"
-            onPress={handleGithubClick}
-          >
-            {/* GitHub logo SVG */}
-            <svg className="mr-1 h-4 w-4" fill="currentColor" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-              <path
-                d={
-                  "M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.54 5.47 7.59.4.07.55-.17.55-.38" +
-                  " 0-.19-.01-.73-.01-1.43-2.24.49-2.71-1.08-2.71-1.08-.36-.91-.88-1.15" +
-                  " -.88-1.15-.72-.49.05-.48.05-.48.8.06 1.22.82 1.22.82.71 1.22 1.86.87" +
-                  " 2.31.67.07-.51.28-.87.51-1.07-1.78-.2-3.65-.89-3.65-3.95 0-.87.31" +
-                  "-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82A7.56 7.56 0" +
-                  " 018 2.5c.68 0 1.36.09 2 .26 1.53-1.03 2.2-.82 2.2-.82.44 1.1.16 1.92" +
-                  " .08 2.12.51.56.82 1.27.82 2.14 0 3.06-1.87 3.75-3.65 3.95.29.25.55.74" +
-                  " .55 1.49 0 1.08-.01 1.95-.01 2.21 0 .21.15.46.55.38C13.71 14.54 16" +
-                  " 11.54 16 8c0-4.42-3.58-8-8-8z"
-                }
-              />
-            </svg>
-            <span className="underline">GitHub repository </span>
+        <div className="relative flex items-center justify-center">
+          {/* Centered GitHub link */}
+          <Link isExternal className="flex items-center gap-1 text-sm text-default-500 hover:text-default-800" href={siteConfig.githubRepoUrl} onPress={handleGithubClick}>
+            <GithubIcon />
+            <span className="underline">GitHub repository</span>
           </Link>
+
+          {/* Theme switch positioned absolutely at the right */}
+          <div className="absolute right-0 top-1/2 -translate-y-1/2">
+            <ThemeSwitch />
+          </div>
         </div>
       </footer>
     </div>
