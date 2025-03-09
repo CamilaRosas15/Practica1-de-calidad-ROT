@@ -9,6 +9,9 @@ import Image from "next/image";
 
 import { CustomButton } from "@/components/CustomButton";
 import { useIsMobile } from "@/lib/hooks/useIsMobile";
+import { GithubIcon } from "@/components/icons";
+import { siteConfig } from "@/config/site";
+import { useGithubStars } from "@/lib/hooks/useGithubStars";
 
 type Screenshot = {
   desktop: {
@@ -193,7 +196,7 @@ const FAQS: readonly Faq[] = [
   {
     question: "Have I been ghosted?",
     answer: `A good guideline is 1 - 2 weeks if there is no response. A lot of companies won't bother with rejection emails. \n
-    If you suspect you’ve been ghosted, you can use our platform to check if others have received responses from the same employer. \n
+    If you suspect you've been ghosted, you can use our platform to check if others have received responses from the same employer. \n
     This information can help you decide whether to follow up with the employer or move on to other opportunities.`,
   },
   {
@@ -265,6 +268,7 @@ function ScreenshotFeature({ feature, isMobile, theme }: { feature: ScreenshotFe
 export function HomePage() {
   const { theme } = useTheme();
   const isMobile = useIsMobile();
+  const { githubStars, isLoading: githubLoading } = useGithubStars();
 
   const [selectedTab, setSelectedTab] = useState<string>("Track Applications");
 
@@ -296,11 +300,43 @@ export function HomePage() {
     });
   };
 
+  const handleGithubClick = () => {
+    mixpanel.track("Github Link Clicked", {
+      action: "hero_banner",
+    });
+  };
+
   return (
     <div className="flex flex-col items-center gap-16 pb-12 md:py-10">
       {/* Hero Section */}
       <section className="flex flex-col items-center gap-4 text-center">
         <motion.div animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-4" initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.5 }}>
+          <div className="mx-auto mb-4 flex items-center justify-center">
+            <Link
+              isExternal
+              // eslint-disable-next-line max-len
+              className="group flex animate-pulse items-center gap-2 rounded-full bg-primary/10 py-2.5 pl-5 pr-4 text-sm font-medium text-primary shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-300 hover:scale-[1.03] hover:animate-none hover:bg-primary/20 hover:shadow-[0_0_20px_rgba(59,130,246,0.7)]"
+              href={siteConfig.githubRepoUrl}
+              onPress={handleGithubClick}
+            >
+              <div className="flex items-center gap-2">
+                <div className="relative h-2 w-2">
+                  <div className="absolute h-2 w-2 animate-ping rounded-full bg-[#0AC8FF] opacity-75" />
+                  <div className="relative h-2 w-2 rounded-full bg-[#0AC8FF]" />
+                </div>
+                <span className="hidden sm:inline">We&apos;re open source! Check it out</span>
+                <span className="inline sm:hidden">We&apos;re open source!</span>
+              </div>
+              <div className="flex items-center gap-1 rounded-full bg-gray-900 px-3 py-1 text-white">
+                <GithubIcon className="h-4 w-4" />
+                <span className="text-xs font-medium">{githubLoading ? "" : githubStars}</span>
+                <svg className="h-3.5 w-3.5 transform transition-transform group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
+                </svg>
+              </div>
+            </Link>
+          </div>
+
           <h1 className="text-4xl font-bold sm:text-5xl md:text-6xl">
             Track Your Job Search
             <br />

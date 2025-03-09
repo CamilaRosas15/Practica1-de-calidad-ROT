@@ -7,29 +7,19 @@ import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import mixpanel from "mixpanel-browser";
-import useSWR from "swr";
 
 import { ClerkUserButton } from "./ClerkUserButton";
 import { GithubIcon } from "./icons";
 
 import { siteConfig } from "@/config/site";
 import { CustomButton } from "@/components/CustomButton";
-import { fetcher } from "@/lib/fetcher";
-
-type GitHubRepoData = {
-  stargazers_count: number;
-};
+import { useGithubStars } from "@/lib/hooks/useGithubStars";
 
 export const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const repoPath = siteConfig.githubRepoUrl.replace("https://github.com/", "");
-
-  const { data: githubData, isLoading: githubLoading } = useSWR<GitHubRepoData>(`https://api.github.com/repos/${repoPath}`, fetcher, {
-    revalidateOnFocus: false,
-    refreshInterval: 60000 * 10, // 10 minutes
-  });
+  const { githubStars, isLoading: githubLoading } = useGithubStars();
 
   // Track menu toggle
   const handleMenuToggle = (isOpen: boolean) => {
@@ -147,13 +137,14 @@ export const Navbar = () => {
         <NavbarItem className="hidden sm:flex">
           <Link
             isExternal
-            className="flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-sm text-default-600 transition-all hover:border-default-500 dark:hover:border-default-700"
+            // eslint-disable-next-line max-len
+            className="flex items-center gap-1 rounded-md border border-transparent px-2 py-1 text-sm text-default-600 transition-all hover:border-default-400 dark:border-default-100 dark:hover:border-default-700"
             href={siteConfig.githubRepoUrl}
             showAnchorIcon={false}
             onPress={handleGithubClick}
           >
             <GithubIcon />
-            <span className="hidden md:inline"> {githubLoading ? "" : `${githubData?.stargazers_count ?? 0}`}</span>
+            <span className="hidden md:inline"> Star {githubLoading ? "" : githubStars}</span>
           </Link>
         </NavbarItem>
 
