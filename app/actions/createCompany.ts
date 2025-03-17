@@ -8,7 +8,7 @@ import { createClerkSupabaseClientSsr } from "@/lib/supabase";
 import { CompanyFormData, companySchema } from "@/lib/schema/addCompanySchema";
 import { DBTable } from "@/lib/constants/dbTables";
 import { withRateLimit } from "@/lib/withRateLimit";
-import { mp } from "@/lib/mixpanelServer";
+import { mpServerTrack } from "@/lib/mixpanelServer";
 import { extractDomain } from "@/lib/extractDomain";
 
 const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: CompanyFormData }): Promise<CompanyTable> => {
@@ -35,10 +35,11 @@ const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: Comp
       if (error) {
         console.error("Insert error fail:", error);
         if (error.code === ERROR_CODES.UNIQUE_VIOLATION) {
-          await mp.track("Duplicate company error", {
+          await mpServerTrack("Duplicate company error", {
             company_name: newCompany.company_name,
             company_url: newCompany.company_url,
             error_message: error.message,
+            user_id,
           });
           if (error.message.includes("company_name")) {
             throw new Error(ERROR_MESSAGES.DUPLICATE_NAME);

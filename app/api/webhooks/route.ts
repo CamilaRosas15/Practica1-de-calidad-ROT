@@ -98,7 +98,7 @@ export async function POST(req: Request) {
     const event_name = isNewUser ? "User Signed Up" : "User Profile Updated";
 
     mp.track(event_name, {
-      distinct_id: userId,
+      $user_id: userId,
       clerk_id: userId,
       email: userEmail,
       github: userGithub,

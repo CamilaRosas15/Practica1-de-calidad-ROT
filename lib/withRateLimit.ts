@@ -4,7 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { ERROR_MESSAGES } from "./errorHandling";
 import { companyLimiters, createFallbackRateLimiters, isUpstashDailyLimitError, jobLimiters, othersLimiters } from "./rateLimit";
 import { RateLimitRouteType } from "./rateLimitConfig";
-import { mp } from "./mixpanelServer";
+import { mpServerTrack } from "./mixpanelServer";
 
 type EndpointName = "CreateJob" | "CreateCompany" | "CreateComment" | "TrackApplication" | "ReportAdmin" | "UpdateInterviewRounds" | "UpdateComment" | "UpdateUserPreferences";
 
@@ -28,14 +28,14 @@ export async function withRateLimit<T>(action: (user_id: string) => Promise<T>, 
     const [burstResult, sustainedResult] = await Promise.all([limiters.burstWrite.limit(ip), limiters.sustainedWrite.limit(ip)]);
 
     if (!burstResult.success || !sustainedResult.success) {
-      await mp.track("Rate limit exceeded", {
-        distinct_id: user_id || `anon_${ip}`,
+      await mpServerTrack("Rate limit exceeded", {
         limiter_type: "Primary",
         route_type: routeType,
         endpoint_name: endpointName,
         attempts_made: burstResult.limit - burstResult.remaining,
         window_type: burstResult.success ? "BURST" : "SUSTAINED",
         ip_address: ip,
+        ...(user_id ? { user_id } : {}),
       });
       throw new Error(ERROR_MESSAGES.TOO_MANY_REQUESTS);
     }
@@ -49,14 +49,14 @@ export async function withRateLimit<T>(action: (user_id: string) => Promise<T>, 
         const failedLimit = !burstFallback.success ? burstFallback : sustainedFallback;
         const windowType = !burstFallback.success ? "BURST" : "SUSTAINED";
 
-        await mp.track("Rate limit exceeded", {
-          distinct_id: user_id || `anon_${ip}`,
+        await mpServerTrack("Rate limit exceeded", {
           limiter_type: "Fallback",
           route_type: routeType,
           endpoint_name: endpointName,
           attempts_made: failedLimit.limit - failedLimit.remaining,
           window_type: windowType,
           ip_address: ip,
+          ...(user_id ? { user_id } : {}),
         });
 
         throw new Error(ERROR_MESSAGES.TOO_MANY_REQUESTS);
