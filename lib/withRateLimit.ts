@@ -4,7 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import { ERROR_MESSAGES } from "./errorHandling";
 import { companyLimiters, createFallbackRateLimiters, isUpstashDailyLimitError, jobLimiters, othersLimiters } from "./rateLimit";
 import { RateLimitRouteType } from "./rateLimitConfig";
-import { mpServerTrack } from "./mixpanelServer";
+
+import { mpServerTrack } from "@/lib/mixpanelServer";
 
 type EndpointName = "CreateJob" | "CreateCompany" | "CreateComment" | "TrackApplication" | "ReportAdmin" | "UpdateInterviewRounds" | "UpdateComment" | "UpdateUserPreferences";
 
@@ -13,7 +14,7 @@ export async function withRateLimit<T>(action: (user_id: string) => Promise<T>, 
 
   if (!user_id) throw new Error("User not authenticated");
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const ip = cookieStore.get("x-real-ip")?.value ?? "127.0.0.1";
   const routeType: RateLimitRouteType = endpointName === "CreateJob" ? "JOB" : endpointName === "CreateCompany" ? "COMPANY" : "OTHERS";
 

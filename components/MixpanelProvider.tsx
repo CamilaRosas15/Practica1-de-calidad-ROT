@@ -5,6 +5,9 @@ import { ReactNode, useEffect } from "react";
 import mixpanel from "mixpanel-browser";
 import { useUser } from "@clerk/nextjs";
 
+import { MIXPANEL_COOKIE_NAME } from "@/lib/constants/mixpanelCookie";
+import { setCookieAction } from "@/app/actions/setCookieAction";
+
 type MixpanelProviderProps = {
   children: ReactNode;
 };
@@ -45,8 +48,22 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
   useEffect(() => {
     if (!isLoaded) return;
 
+    const currentDistinctId = mixpanel.get_distinct_id();
+
     if (user) {
-      mixpanel.identify(user.id);
+      // Only call identify() if the current distinct ID isn't already the user ID
+      if (currentDistinctId !== user.id) {
+        // Track a special event with both IDs to ensure proper identity merging
+        mixpanel.track("User Authenticated", {
+          $device_id: currentDistinctId,
+          $user_id: user.id,
+        });
+
+        mixpanel.identify(user.id);
+
+        setCookieAction(MIXPANEL_COOKIE_NAME, user.id);
+      }
+
       mixpanel.people.set({
         $email: user.primaryEmailAddress?.emailAddress,
         $github: user.externalAccounts.find((account) => account.provider === "github")?.username,
@@ -58,11 +75,15 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
     } else {
       // Only reset if we're transitioning from logged in to logged out
       // Not on initial load or browser refresh
-      const currentDistinctId = mixpanel.get_distinct_id();
       const wasLoggedIn = typeof currentDistinctId === "string" && currentDistinctId.startsWith("user_");
 
       if (wasLoggedIn) {
         mixpanel.reset();
+
+        // After reset, get the new anonymous ID and update the cookie
+        const newAnonymousId = mixpanel.get_distinct_id();
+
+        setCookieAction(MIXPANEL_COOKIE_NAME, newAnonymousId);
       }
     }
   }, [isLoaded, user]);
