@@ -7,6 +7,7 @@ import { useUser } from "@clerk/nextjs";
 
 import { MIXPANEL_COOKIE_NAME } from "@/lib/constants/mixpanelCookie";
 import { setCookieAction } from "@/app/actions/setCookieAction";
+import { getCookieAction } from "@/app/actions/getCookieAction";
 
 type MixpanelProviderProps = {
   children: ReactNode;
@@ -51,27 +52,20 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
     const currentDistinctId = mixpanel.get_distinct_id();
 
     if (user) {
-      // Only call identify() if the current distinct ID isn't already the user ID
       if (currentDistinctId !== user.id) {
-        // Track a special event with both IDs to ensure proper identity merging
-        mixpanel.track("User Authenticated", {
-          $device_id: currentDistinctId,
-          $user_id: user.id,
-        });
+        // Set the user ID as distinct_id for all events after login
+        const deviceId = currentDistinctId;
 
         mixpanel.identify(user.id);
 
-        setCookieAction(MIXPANEL_COOKIE_NAME, user.id);
-      }
+        mixpanel.track("User Identified", {
+          $user_id: user.id,
+          $device_id: deviceId,
+        });
 
-      mixpanel.people.set({
-        $email: user.primaryEmailAddress?.emailAddress,
-        $github: user.externalAccounts.find((account) => account.provider === "github")?.username,
-        $name: user.fullName,
-        $avatar: user.imageUrl,
-        $created: user.createdAt,
-        clerk_id: user.id,
-      });
+        // Set the cookie to the device ID once
+        setCookieAction(MIXPANEL_COOKIE_NAME, deviceId);
+      }
     } else {
       // Only reset if we're transitioning from logged in to logged out
       // Not on initial load or browser refresh
@@ -84,6 +78,13 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
         const newAnonymousId = mixpanel.get_distinct_id();
 
         setCookieAction(MIXPANEL_COOKIE_NAME, newAnonymousId);
+      } else {
+        // Anonymous user: set cookie only if it doesn't exist
+        const existingCookie = getCookieAction(MIXPANEL_COOKIE_NAME);
+
+        if (!existingCookie) {
+          setCookieAction(MIXPANEL_COOKIE_NAME, currentDistinctId);
+        }
       }
     }
   }, [isLoaded, user]);

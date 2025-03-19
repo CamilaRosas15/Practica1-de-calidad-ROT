@@ -16,7 +16,9 @@ export async function mpServerTrack(eventName: string, properties: Record<string
   let deviceId = cookieStore.get(MIXPANEL_COOKIE_NAME)?.value;
 
   // Set device ID for all events
-  properties.$device_id = deviceId;
+  if (deviceId) {
+    properties.$device_id = deviceId;
+  }
 
   // Handle user ID if provided
   if (properties.user_id) {

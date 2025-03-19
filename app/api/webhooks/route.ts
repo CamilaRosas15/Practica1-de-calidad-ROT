@@ -4,7 +4,7 @@ import { UserWebhookEvent, WebhookEvent } from "@clerk/nextjs/server";
 
 import { createSupabaseAdminClient } from "@/lib/supabase";
 import { DBTable } from "@/lib/constants/dbTables";
-import { mp } from "@/lib/mixpanelServer";
+import { mp, mpServerTrack } from "@/lib/mixpanelServer";
 
 function getPrimaryOrFirstEmail(evt: UserWebhookEvent): string | null {
   // Only handle user.created and user.updated events
@@ -87,24 +87,29 @@ export async function POST(req: Request) {
     const isNewUser = evt.type === "user.created";
     const timestamp = new Date().toISOString();
 
+    mp.people.set_once(userId, {
+      $created: timestamp,
+    });
+
     mp.people.set(userId, {
       $email: userEmail,
       $name: userFullName,
+      $avatar: evt.data.image_url,
       github: userGithub,
       clerk_id: userId,
-      ...(isNewUser ? { signup_date: timestamp } : { update_date: timestamp }),
+      ...(isNewUser ? {} : { update_date: timestamp }),
     });
 
     const event_name = isNewUser ? "User Signed Up" : "User Profile Updated";
 
-    mp.track(event_name, {
+    mpServerTrack(event_name, {
       $user_id: userId,
       clerk_id: userId,
       email: userEmail,
       github: userGithub,
       name: userFullName,
       source: "Clerk Webhook",
-      ...(isNewUser ? { signup_date: timestamp } : { update_date: timestamp }),
+      ...(isNewUser ? {} : { update_date: timestamp }),
     });
 
     // Supabase create/update user data
