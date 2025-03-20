@@ -9,6 +9,16 @@ import { MIXPANEL_COOKIE_NAME } from "@/lib/constants/mixpanelCookie";
 import { setCookieAction } from "@/app/actions/setCookieAction";
 import { getCookieAction } from "@/app/actions/getCookieAction";
 
+/**
+ * Removes the `$device:` prefix from a prefixed Mixpanel device ID.
+ * Used for anonymous users (non-logged-in) where the ID is guaranteed to include the prefix.
+ *
+ * @param prefixedDeviceId - The device ID with the `$device:` prefix (e.g., `$device:abc123`).
+ */
+function removeDevicePrefix(prefixedDeviceId: string): string {
+  return prefixedDeviceId.replace(/^\$device:/, "");
+}
+
 type MixpanelProviderProps = {
   children: ReactNode;
 };
@@ -27,6 +37,7 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
       track_pageview: "url-with-path",
       persistence: "localStorage",
       record_sessions_percent: Number(process.env.NEXT_PUBLIC_MIXPANEL_RECORD_SESSIONS_PERCENT ?? 1),
+      ignore_dnt: true,
     });
   }, []);
 
@@ -54,7 +65,7 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
     if (user) {
       if (currentDistinctId !== user.id) {
         // Set the user ID as distinct_id for all events after login
-        const deviceId = currentDistinctId;
+        const deviceId = removeDevicePrefix(currentDistinctId);
 
         mixpanel.identify(user.id);
 
@@ -77,13 +88,13 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
         // After reset, get the new anonymous ID and update the cookie
         const newAnonymousId = mixpanel.get_distinct_id();
 
-        setCookieAction(MIXPANEL_COOKIE_NAME, newAnonymousId);
+        setCookieAction(MIXPANEL_COOKIE_NAME, removeDevicePrefix(newAnonymousId));
       } else {
         // Anonymous user: set cookie only if it doesn't exist
         const existingCookie = getCookieAction(MIXPANEL_COOKIE_NAME);
 
         if (!existingCookie) {
-          setCookieAction(MIXPANEL_COOKIE_NAME, currentDistinctId);
+          setCookieAction(MIXPANEL_COOKIE_NAME, removeDevicePrefix(currentDistinctId));
         }
       }
     }
