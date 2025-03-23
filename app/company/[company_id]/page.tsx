@@ -99,39 +99,20 @@ export default function CompanyDetailsPage() {
     if (isCreating) return;
 
     try {
-      await createJob(data);
+      await createJob(data, company.company_name);
 
-      mixpanel.track("Job Added Success", {
-        company_name: company.company_name,
-        company_id,
-        job_title: data.title,
-        countries: data.countries,
-        experience_level_names: data.experience_level_names,
-        job_category_names: data.job_category_names,
-        job_url: data.url,
-      });
       toast.success("Job added successfully");
 
       setIsModalOpen(false);
     } catch (err) {
       console.error("Error adding job:", err);
+
       if (isRateLimitError(err)) {
         toast.error(ERROR_MESSAGES.TOO_MANY_REQUESTS);
 
         return; // Return early to avoid showing generic error
       }
 
-      mixpanel.track("Job Added Error", {
-        action: "job_creation_error",
-        company_name: company.company_name,
-        company_id,
-        job_title: data.title,
-        countries: data.countries,
-        experience_level_names: data.experience_level_names,
-        job_category_names: data.job_category_names,
-        job_url: data.url,
-        error: err instanceof Error ? err.message : "Unknown error occurred",
-      });
       toast.error("Error adding job");
     }
   });

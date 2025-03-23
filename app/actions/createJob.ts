@@ -7,46 +7,101 @@ import { AddJobFormData, addJobSchema } from "@/lib/schema/addJobSchema";
 import { withRateLimit } from "@/lib/withRateLimit";
 import { DB_RPC } from "@/lib/constants/apiRoutes";
 import { isLinkedInDomain } from "@/lib/extractDomain";
+import { mpServerTrack } from "@/lib/mixpanelServer";
+import { ERROR_MESSAGES } from "@/lib/errorHandling";
 
 export type CreateJobArgs = Pick<JobPostingTable, "company_id"> & {
   newJob: AddJobFormData;
+  company_name: string;
 };
 
-const actionCreateJob = async (key: string, { arg }: { arg: CreateJobArgs }): Promise<void> => {
-  return await withRateLimit(async (user_id) => {
-    const supabase = await createClerkSupabaseClientSsr();
-    const { company_id, newJob } = arg;
+// Define a response type for success/error states
+type JobActionResult = { success: true } | { success: false; error: string };
 
-    try {
-      // Server-side validation
-      const validatedData = addJobSchema.parse(newJob);
+const actionCreateJob = async (key: string, { arg }: { arg: CreateJobArgs }): Promise<JobActionResult> => {
+  try {
+    return await withRateLimit(async (user_id) => {
+      const supabase = await createClerkSupabaseClientSsr();
+      const { company_id, newJob, company_name } = arg;
 
-      const isLinkedInUrl = isLinkedInDomain(validatedData.url);
+      try {
+        // Server-side validation
+        const validatedData = addJobSchema.parse(newJob);
 
-      const { error } = await supabase.rpc(DB_RPC.INSERT_JOB_WITH_COUNTRIES, {
-        p_title: validatedData.title,
-        p_url: validatedData.url,
-        p_company_id: company_id,
-        p_user_id: user_id,
-        p_country_names: validatedData.countries,
-        p_experience_level_names: validatedData.experience_level_names,
-        p_job_category_names: validatedData.job_category_names,
-        p_job_url_linkedin: isLinkedInUrl ? validatedData.url : null,
-      });
+        const isLinkedInUrl = isLinkedInDomain(validatedData.url);
 
-      if (error) {
-        console.error("RPC error:", error.message);
-        throw new Error(error.message);
+        const { error } = await supabase.rpc(DB_RPC.INSERT_JOB_WITH_COUNTRIES, {
+          p_title: validatedData.title,
+          p_url: validatedData.url,
+          p_company_id: company_id,
+          p_user_id: user_id,
+          p_country_names: validatedData.countries,
+          p_experience_level_names: validatedData.experience_level_names,
+          p_job_category_names: validatedData.job_category_names,
+          p_job_url_linkedin: isLinkedInUrl ? validatedData.url : null,
+        });
+
+        if (error) {
+          console.error("Create Job RPC error:", error.message);
+
+          // Track error on server
+          await mpServerTrack("Job Added Error", {
+            company_name,
+            company_id,
+            job_title: validatedData.title,
+            countries: validatedData.countries,
+            experience_level_names: validatedData.experience_level_names,
+            job_category_names: validatedData.job_category_names,
+            job_url: validatedData.url,
+            error_message: error.message,
+            user_id,
+          });
+
+          return { success: false, error: error.message };
+        }
+
+        // Track success on server
+        await mpServerTrack("Job Added Success", {
+          company_name,
+          company_id,
+          job_title: validatedData.title,
+          countries: validatedData.countries,
+          experience_level_names: validatedData.experience_level_names,
+          job_category_names: validatedData.job_category_names,
+          job_url: validatedData.url,
+          user_id,
+        });
+
+        return { success: true };
+      } catch (err) {
+        // Determine error message
+        console.error("Create Job error:", err);
+
+        const errorMessage = err instanceof z.ZodError ? err.errors.map((issue) => issue.message).join(", ") : err instanceof Error ? err.message : "Unknown error occurred";
+
+        // Track all errors that reach this catch block
+        await mpServerTrack("Job Added Error", {
+          company_name,
+          company_id,
+          job_title: newJob.title,
+          countries: newJob.countries,
+          experience_level_names: newJob.experience_level_names,
+          job_category_names: newJob.job_category_names,
+          job_url: newJob.url,
+          error: errorMessage,
+          user_id,
+        });
+
+        return { success: false, error: errorMessage };
       }
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        console.error("Zod validation error:", err.errors);
-        throw new Error(err.errors.map((issue) => issue.message).join(", "));
-      }
-      console.error("Error executing RPC:", err);
-      throw err;
-    }
-  }, "CreateJob");
+    }, "CreateJob");
+  } catch (rateError) {
+    // Handle rate limit errors
+    return {
+      success: false,
+      error: ERROR_MESSAGES.TOO_MANY_REQUESTS,
+    };
+  }
 };
 
 export default actionCreateJob;

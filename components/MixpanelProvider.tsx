@@ -9,16 +9,6 @@ import { MIXPANEL_COOKIE_NAME } from "@/lib/constants/mixpanelCookie";
 import { setCookieAction } from "@/app/actions/setCookieAction";
 import { getCookieAction } from "@/app/actions/getCookieAction";
 
-/**
- * Removes the `$device:` prefix from a prefixed Mixpanel device ID.
- * Used for anonymous users (non-logged-in) where the ID is guaranteed to include the prefix.
- *
- * @param prefixedDeviceId - The device ID with the `$device:` prefix (e.g., `$device:abc123`).
- */
-function removeDevicePrefix(prefixedDeviceId: string): string {
-  return prefixedDeviceId.replace(/^\$device:/, "");
-}
-
 type MixpanelProviderProps = {
   children: ReactNode;
 };
@@ -60,44 +50,54 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
   useEffect(() => {
     if (!isLoaded) return;
 
-    const currentDistinctId = mixpanel.get_distinct_id();
+    const handleUserIdentification = async () => {
+      const currentDistinctId = mixpanel.get_distinct_id();
 
-    if (user) {
-      if (currentDistinctId !== user.id) {
-        // Set the user ID as distinct_id for all events after login
-        const deviceId = removeDevicePrefix(currentDistinctId);
+      const deviceId = mixpanel.get_property("$device_id");
 
-        mixpanel.identify(user.id);
+      if (user) {
+        // User is logged in
+        if (currentDistinctId !== user.id) {
+          // Set the user ID as distinct_id for all events after login
+          mixpanel.identify(user.id);
 
-        mixpanel.track("User Identified", {
-          $user_id: user.id,
-          $device_id: deviceId,
-        });
+          mixpanel.track("User Identified", {
+            $user_id: user.id,
+            $device_id: deviceId,
+          });
 
-        // Set the cookie to the device ID once
-        setCookieAction(MIXPANEL_COOKIE_NAME, deviceId);
-      }
-    } else {
-      // Only reset if we're transitioning from logged in to logged out
-      // Not on initial load or browser refresh
-      const wasLoggedIn = typeof currentDistinctId === "string" && currentDistinctId.startsWith("user_");
-
-      if (wasLoggedIn) {
-        mixpanel.reset();
-
-        // After reset, get the new anonymous ID and update the cookie
-        const newAnonymousId = mixpanel.get_distinct_id();
-
-        setCookieAction(MIXPANEL_COOKIE_NAME, removeDevicePrefix(newAnonymousId));
+          // Set the cookie to the device ID once
+          await setCookieAction(MIXPANEL_COOKIE_NAME, deviceId);
+        }
       } else {
-        // Anonymous user: set cookie only if it doesn't exist
-        const existingCookie = getCookieAction(MIXPANEL_COOKIE_NAME);
+        // User is logged out
 
-        if (!existingCookie) {
-          setCookieAction(MIXPANEL_COOKIE_NAME, removeDevicePrefix(currentDistinctId));
+        // Only reset if we're transitioning from logged in to logged out
+        // Not on initial load or browser refresh
+        const wasLoggedIn = typeof currentDistinctId === "string" && currentDistinctId.startsWith("user_");
+
+        if (wasLoggedIn) {
+          mixpanel.reset();
+
+          // After reset, get the new device ID and update the cookie
+          const newDeviceId = mixpanel.get_property("$device_id");
+
+          await setCookieAction(MIXPANEL_COOKIE_NAME, newDeviceId);
+        } else {
+          // Anonymous user: set cookie only if it doesn't exist
+          const existingCookie = await getCookieAction(MIXPANEL_COOKIE_NAME);
+
+          if (!existingCookie) {
+            await setCookieAction(MIXPANEL_COOKIE_NAME, deviceId);
+          }
         }
       }
-    }
+    };
+
+    // Execute the async function
+    handleUserIdentification().catch((error) => {
+      console.error("Error in Mixpanel identification process:", error);
+    });
   }, [isLoaded, user]);
 
   // Track page views

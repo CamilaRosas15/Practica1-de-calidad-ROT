@@ -102,15 +102,19 @@ export async function POST(req: Request) {
 
     const event_name = isNewUser ? "User Signed Up" : "User Profile Updated";
 
-    mpServerTrack(event_name, {
-      $user_id: userId,
-      clerk_id: userId,
-      email: userEmail,
-      github: userGithub,
-      name: userFullName,
-      source: "Clerk Webhook",
-      ...(isNewUser ? {} : { update_date: timestamp }),
-    });
+    mpServerTrack(
+      event_name,
+      {
+        $user_id: userId,
+        clerk_id: userId,
+        email: userEmail,
+        github: userGithub,
+        name: userFullName,
+        source: "Clerk Webhook",
+        ...(isNewUser ? {} : { update_date: timestamp }),
+      },
+      true,
+    );
 
     // Supabase create/update user data
     const supabase = await createSupabaseAdminClient();

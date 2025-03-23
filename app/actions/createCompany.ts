@@ -8,61 +8,89 @@ import { createClerkSupabaseClientSsr } from "@/lib/supabase";
 import { CompanyFormData, companySchema } from "@/lib/schema/addCompanySchema";
 import { DBTable } from "@/lib/constants/dbTables";
 import { withRateLimit } from "@/lib/withRateLimit";
-import { mpServerTrack } from "@/lib/mixpanelServer";
 import { extractDomain } from "@/lib/extractDomain";
+import { mpServerTrack } from "@/lib/mixpanelServer";
 
-const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: CompanyFormData }): Promise<CompanyTable> => {
-  return await withRateLimit(async () => {
-    const supabase = await createClerkSupabaseClientSsr();
-    const { userId: user_id } = auth();
+// Define a return type that includes success/error states
+type CompanyActionResult = { success: true } | { success: false; error: string };
 
-    if (!user_id) {
-      throw new Error("User not authenticated");
-    }
+const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: CompanyFormData }): Promise<CompanyActionResult> => {
+  try {
+    return await withRateLimit(async () => {
+      const supabase = await createClerkSupabaseClientSsr();
+      const { userId: user_id } = auth();
 
-    try {
-      // Server-side validation
-      const validatedData = companySchema.parse(newCompany);
+      if (!user_id) {
+        return { success: false, error: "User not authenticated" };
+      }
 
-      const dataToInsert = {
-        ...validatedData,
-        logo_url: extractDomain(validatedData.company_url),
-        user_id,
-      };
+      try {
+        // Server-side validation
+        const validatedData = companySchema.parse(newCompany);
 
-      const { data, error } = await supabase.from(DBTable.COMPANY).insert(dataToInsert).select();
+        const dataToInsert = {
+          ...validatedData,
+          logo_url: extractDomain(validatedData.company_url),
+          user_id,
+        };
 
-      if (error) {
-        console.error("Insert error fail:", error);
-        if (error.code === ERROR_CODES.UNIQUE_VIOLATION) {
-          await mpServerTrack("Duplicate company error", {
-            company_name: newCompany.company_name,
-            company_url: newCompany.company_url,
-            error_message: error.message,
-            user_id,
-          });
-          if (error.message.includes("company_name")) {
-            throw new Error(ERROR_MESSAGES.DUPLICATE_NAME);
+        const { error } = await supabase.from(DBTable.COMPANY).insert(dataToInsert).select();
+
+        if (error) {
+          console.error("Create Company error duplicate:", error);
+          if (error.code === ERROR_CODES.UNIQUE_VIOLATION) {
+            await mpServerTrack("Duplicate company error", {
+              company_name: newCompany.company_name,
+              company_url: newCompany.company_url,
+              error_message: error.message,
+              user_id,
+            });
+
+            if (error.message.includes("company_name")) {
+              return { success: false, error: ERROR_MESSAGES.DUPLICATE_NAME };
+            }
+
+            if (error.message.includes("company_url")) {
+              return { success: false, error: ERROR_MESSAGES.DUPLICATE_URL };
+            }
           }
 
-          if (error.message.includes("company_url")) {
-            throw new Error(ERROR_MESSAGES.DUPLICATE_URL);
-          }
+          return { success: false, error: error.message };
         }
-        throw new Error(error.message);
-      }
 
-      return data[0];
-    } catch (err) {
-      if (err instanceof z.ZodError) {
-        console.error("Zod validation error:", err.errors);
-        throw new Error(err.errors.map((issue) => issue.message).join(", "));
-      }
+        await mpServerTrack("Company Added Success", {
+          company_name: newCompany.company_name,
+          company_url: newCompany.company_url,
+          user_id,
+        });
 
-      console.error("Error executing insert:", err);
-      throw err;
-    }
-  }, "CreateCompany");
+        return { success: true };
+      } catch (err) {
+        // Add general error tracking for non-duplicate errors
+        console.error("Create Company error:", err);
+
+        const errorMessage = err instanceof z.ZodError ? err.errors.map((issue) => issue.message).join(", ") : err instanceof Error ? err.message : "Unknown error occurred";
+
+        await mpServerTrack("Company Added Error", {
+          company_name: newCompany.company_name,
+          company_url: newCompany.company_url,
+          error: errorMessage,
+          user_id,
+        });
+
+        return {
+          success: false,
+          error: errorMessage,
+        };
+      }
+    }, "CreateCompany");
+  } catch (rateError) {
+    // Handle rate limit errors
+    return {
+      success: false,
+      error: ERROR_MESSAGES.TOO_MANY_REQUESTS,
+    };
+  }
 };
 
 export default actionCreateCompany;
