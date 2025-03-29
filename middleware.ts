@@ -5,6 +5,7 @@ import { createRateLimitResponse } from "@/lib/errorHandling";
 import { jobLimiters, othersLimiters, companyLimiters, settingsLimiters, createFallbackRateLimiters } from "@/lib/rateLimit";
 import { RateLimitRouteType, OperationType } from "@/lib/rateLimitConfig";
 import { MIXPANEL_COOKIE_NAME } from "@/lib/constants/mixpanelCookie";
+import { getClientIp } from "@/lib/getClientIp";
 
 const isProtectedRoute = createRouteMatcher(["/applications", "/settings"]);
 
@@ -42,7 +43,7 @@ export default clerkMiddleware(async (auth, req) => {
 
   if (isPageRequest) {
     // Get IP for geolocation
-    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || req.headers.get("x-real-ip") || req.ip;
+    const clientIp = getClientIp(req);
 
     // Check for existing device ID cookie
     const cookieStore = req.cookies;
@@ -87,7 +88,7 @@ export default clerkMiddleware(async (auth, req) => {
     // NOTE: middleware node runtime can be used if upgrade to nextjs 15
     try {
       // Don't await this to avoid delaying page loads
-      fetch(`${url.origin}/api/analytics/page-view`, {
+      fetch(`${url.origin}/api/analytics/page-view?t=${Date.now()}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

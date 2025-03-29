@@ -1,19 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { mpServerTrack } from "@/lib/mixpanelServer";
+import { sharedRedis } from "@/lib/rateLimit";
+import { getClientIp } from "@/lib/getClientIp";
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
 
-    // Get the client IP from headers if not provided (prioritize x-forwarded-for which contains the original client IP)
-    if (!data.ip) {
-      const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0].trim() || request.headers.get("x-real-ip") || request.ip;
+    // Deduplication check
+    const dedupeKey = `dedupe:${data.$device_id}:${data.path}`;
 
-      data.ip = clientIp;
+    try {
+      const result = await sharedRedis.set(dedupeKey, "1", {
+        nx: true, // Only set if not exists
+        ex: 1, // 1 second expiration
+      });
+
+      if (result !== "OK") {
+        return NextResponse.json({ success: true, message: "Duplicate event skipped" }, { status: 200 });
+      }
+    } catch (redisError) {
+      console.error("Redis dedupe failed:", redisError);
+      // Continue tracking anyway to avoid losing data
     }
 
-    // Add user agent for browser detection
+    // Enrich with server-side IP if missing
+    if (!data.ip) {
+      data.ip = getClientIp(request);
+    }
 
     await mpServerTrack("Page View Server", data);
 

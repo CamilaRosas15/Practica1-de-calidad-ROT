@@ -92,3 +92,5 @@ export async function createFallbackRateLimiters({ routeType, operation, ip }: C
 
   return Promise.all([burstLimiter.limit(ip), sustainedLimiter.limit(ip)]);
 }
+
+export const sharedRedis = redis; // Reuse existing connection
