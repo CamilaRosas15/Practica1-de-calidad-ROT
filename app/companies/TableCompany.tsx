@@ -151,13 +151,21 @@ export function TableCompanyContent() {
     });
   };
 
-  const handleModalClose = () => {
+  const mixpanelTrackModalClose = () => {
     mixpanel.track("Company Table", {
       action: "add_company_modal_closed",
       search_term: filterValue,
       current_page: page,
       total_pages: pages,
     });
+  };
+
+  const handleModalClose = () => {
+    mixpanelTrackModalClose();
+    setIsModalOpen(false);
+  };
+
+  const handleSubmitSuccess = () => {
     setIsModalOpen(false);
   };
 
@@ -292,7 +300,7 @@ export function TableCompanyContent() {
         {bottomContent}
 
         {/* Modal */}
-        <CreateCompanyModal isOpen={isModalOpen} onClose={handleModalClose} />
+        <CreateCompanyModal isOpen={isModalOpen} onClose={handleModalClose} onSubmitSuccess={handleSubmitSuccess} />
       </div>
     </>
   );

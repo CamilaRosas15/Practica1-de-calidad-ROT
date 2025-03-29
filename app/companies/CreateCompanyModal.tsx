@@ -12,9 +12,10 @@ import { CustomButton } from "@/components/CustomButton";
 type CreateCompanyModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  onSubmitSuccess: () => void;
 };
 
-export function CreateCompanyModal({ isOpen, onClose }: CreateCompanyModalProps) {
+export function CreateCompanyModal({ isOpen, onClose, onSubmitSuccess }: CreateCompanyModalProps) {
   const { createCompany, isCreating } = useCreateCompany();
 
   const {
@@ -40,7 +41,7 @@ export function CreateCompanyModal({ isOpen, onClose }: CreateCompanyModalProps)
       toast.success("Company created successfully");
 
       reset();
-      onClose();
+      onSubmitSuccess();
     } catch (error) {
       console.error("Error creating company:", getErrorMessage(error));
 
