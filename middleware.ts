@@ -1,9 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextResponse, userAgent } from "next/server";
 
 import { createRateLimitResponse } from "@/lib/errorHandling";
 import { jobLimiters, othersLimiters, companyLimiters, settingsLimiters, createFallbackRateLimiters } from "@/lib/rateLimit";
 import { RateLimitRouteType, OperationType } from "@/lib/rateLimitConfig";
+import { MIXPANEL_COOKIE_NAME } from "@/lib/constants/mixpanelCookie";
 
 const isProtectedRoute = createRouteMatcher(["/applications", "/settings"]);
 
@@ -31,6 +32,84 @@ const IS_UPSTASH_FAILED = process.env.NEXT_PUBLIC_IS_UPSTASH_FAILED === "true";
 
 export default clerkMiddleware(async (auth, req) => {
   const session = await auth();
+
+  const userId = session?.userId;
+  const url = new URL(req.url);
+  const pathname = url.pathname;
+
+  // Only track actual page views (not API calls, static assets, etc.)
+  const isPageRequest = !pathname.startsWith("/api/") && !pathname.startsWith("/_next/") && !pathname.startsWith("/static/") && !pathname.startsWith("/assets/") && !pathname.includes(".");
+
+  if (isPageRequest) {
+    // Get IP for geolocation
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || req.headers.get("x-real-ip") || req.ip;
+
+    // Check for existing device ID cookie
+    const cookieStore = req.cookies;
+    let deviceId = cookieStore.get(MIXPANEL_COOKIE_NAME)?.value;
+    let response = NextResponse.next();
+
+    // Generate new device ID if needed
+    if (!deviceId) {
+      deviceId = crypto.randomUUID();
+
+      // Set the cookie in the response
+      response.cookies.set({
+        name: MIXPANEL_COOKIE_NAME,
+        value: deviceId,
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 60 * 60 * 24 * 365, // same as mixpanel default
+      });
+    }
+
+    const { device, browser, os, isBot, ua } = userAgent(req);
+
+    const userAgentData = {
+      // Browser properties
+      $browser: browser.name,
+      $browser_version: browser.version,
+
+      // OS properties
+      $os: os.name,
+      $os_version: os.version,
+
+      // Device properties (if available)
+      $device: device.vendor,
+      $model: device.model,
+
+      userAgent: ua,
+      isBot,
+    };
+
+    // Instead of direct tracking, make a fetch request to our API
+    // NOTE: middleware node runtime can be used if upgrade to nextjs 15
+    try {
+      // Don't await this to avoid delaying page loads
+      fetch(`${url.origin}/api/analytics/page-view`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          path: pathname,
+          $current_url: req.url,
+          referrer: req.headers.get("referer") || undefined,
+          ip: clientIp,
+          $device_id: deviceId,
+          ...userAgentData,
+          ...(userId ? { user_id: userId } : {}), // Conditionally add user_id
+          // Add any UTM params from the URL if present
+          ...Object.fromEntries(Array.from(url.searchParams.entries()).filter(([key]) => key.startsWith("utm_"))),
+        }),
+      }).catch((error) => {
+        // Silently log errors but don't block the request
+        console.error("Failed to send page view to analytics API:", error);
+      });
+    } catch (error) {
+      // Don't let analytics errors affect the user experience
+      console.error("Error in analytics middleware:", error);
+    }
+  }
 
   // First check: Protects API routes (requires authentication)
 

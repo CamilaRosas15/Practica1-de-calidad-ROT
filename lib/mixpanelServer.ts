@@ -2,7 +2,6 @@ import Mixpanel from "mixpanel";
 import { cookies } from "next/headers";
 
 import { MIXPANEL_COOKIE_NAME } from "@/lib/constants/mixpanelCookie";
-import { setCookieAction } from "@/app/actions/setCookieAction";
 
 // Create singleton instance
 const mp = Mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_TOKEN!, {
@@ -15,18 +14,15 @@ const mp = Mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_TOKEN!, {
 export async function mpServerTrack(eventName: string, properties: Record<string, any> = {}, isWebhook = false) {
   try {
     // Skip cookie handling for webhooks
-    if (!isWebhook) {
+    if (!isWebhook && !properties.$device_id) {
       const cookieStore = await cookies();
 
       let deviceId = cookieStore.get(MIXPANEL_COOKIE_NAME)?.value;
 
-      if (!deviceId) {
-        deviceId = crypto.randomUUID();
-        await setCookieAction(MIXPANEL_COOKIE_NAME, deviceId);
+      // Set device ID for all events, Only set from cookie if not already provided in properties
+      if (deviceId) {
+        properties.$device_id = deviceId;
       }
-
-      // Set device ID for all events
-      properties.$device_id = deviceId;
     }
 
     // Handle user ID if provided
