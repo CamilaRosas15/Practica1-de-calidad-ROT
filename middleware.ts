@@ -38,10 +38,13 @@ export default clerkMiddleware(async (auth, req) => {
   const url = new URL(req.url);
   const pathname = url.pathname;
 
-  // Only track actual page views (not API calls, static assets, etc.)
+  // Only track actual page views (not API calls, static assets, files in public folder etc.)
   const isPageRequest = !pathname.startsWith("/api/") && !pathname.startsWith("/_next/") && !pathname.startsWith("/static/") && !pathname.startsWith("/assets/") && !pathname.includes(".");
 
-  if (isPageRequest) {
+  // https://github.com/vercel/next.js/discussions/37736 - handle prefetch in middleware nextjs
+  const isPrefetch = req.headers.get("sec-fetch-mode") === "cors" && req.headers.get("sec-fetch-dest") === "empty" && req.headers.get("next-url") !== null;
+
+  if (isPageRequest && !isPrefetch) {
     // Get IP for geolocation
     const clientIp = getClientIp(req);
 
