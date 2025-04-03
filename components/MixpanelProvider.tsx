@@ -1,20 +1,22 @@
 "use client";
 
 import { ReactNode, useEffect } from "react";
-// import { usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import mixpanel from "mixpanel-browser";
 import { useUser } from "@clerk/nextjs";
 
 import { MIXPANEL_COOKIE_NAME } from "@/lib/constants/mixpanelCookie";
 import { setCookieAction } from "@/app/actions/setCookieAction";
 import { getCookieAction } from "@/app/actions/getCookieAction";
+import { API } from "@/lib/constants/apiRoutes";
+import { trackPageViewAction } from "@/app/actions/trackPageViewAction";
 
 type MixpanelProviderProps = {
   children: ReactNode;
 };
 
 export function MixpanelProvider({ children }: MixpanelProviderProps) {
-  //   const pathname = usePathname();
+  const pathname = usePathname();
 
   const { user, isLoaded } = useUser();
 
@@ -28,32 +30,39 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
       persistence: "localStorage",
       record_sessions_percent: Number(process.env.NEXT_PUBLIC_MIXPANEL_RECORD_SESSIONS_PERCENT ?? 1),
       ignore_dnt: true,
+      api_host: process.env.NEXT_PUBLIC_MIXPANEL_API_HOST,
     });
   }, []);
 
   // Set Super Property for isSignedIn
   useEffect(() => {
-    if (isLoaded) {
-      const isSignedIn = !!user;
+    if (!isLoaded) {
+      return;
+    }
 
-      const currentIsSignedIn = mixpanel.get_property("is_signed_in");
+    const isSignedIn = !!user;
 
-      if (isSignedIn !== currentIsSignedIn) {
-        mixpanel.register({
-          is_signed_in: isSignedIn, // true if user is signed in, false otherwise
-        });
-      }
+    const currentIsSignedIn = mixpanel.get_property("is_signed_in");
+
+    if (isSignedIn !== currentIsSignedIn) {
+      mixpanel.register({
+        is_signed_in: isSignedIn, // true if user is signed in, false otherwise
+      });
     }
   }, [isLoaded, user]);
 
   // Identify user when they log in
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded) {
+      return;
+    }
 
     const handleUserIdentification = async () => {
       const currentDistinctId = mixpanel.get_distinct_id();
 
       const deviceId = mixpanel.get_property("$device_id");
+
+      const existingCookieDeviceId = await getCookieAction(MIXPANEL_COOKIE_NAME);
 
       if (user) {
         // User is logged in
@@ -84,10 +93,8 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
 
           await setCookieAction(MIXPANEL_COOKIE_NAME, newDeviceId);
         } else {
-          // Anonymous user: set cookie only if it doesn't exist
-          const existingCookie = await getCookieAction(MIXPANEL_COOKIE_NAME);
-
-          if (!existingCookie) {
+          // Anonymous user: ALWAYS sync cookie with Mixpanel's device ID
+          if (existingCookieDeviceId !== deviceId) {
             await setCookieAction(MIXPANEL_COOKIE_NAME, deviceId);
           }
         }
@@ -100,12 +107,65 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
     });
   }, [isLoaded, user]);
 
+  // TODO: (experimenting) decide if we want to track page views from here or in middleware
   // Track page views
-  //   useEffect(() => {
-  //     if (pathname) {
-  //       mixpanel.track("Page View", { path: pathname });
-  //     }
-  //   }, [pathname]);
+  useEffect(() => {
+    if (!pathname || !isLoaded) {
+      return;
+    }
+
+    // mixpanel.track("Page View", { path: pathname });
+
+    const trackPageView = async () => {
+      const url = new URL(window.location.href);
+      const utmParams = Object.fromEntries(Array.from(url.searchParams.entries()).filter(([key]) => key.startsWith("utm_")));
+
+      // Get device ID from mixpanel client
+      const deviceId = mixpanel.get_property("$device_id") ?? "unknownDeviceId";
+
+      const cookieDeviceId = (await getCookieAction(MIXPANEL_COOKIE_NAME)) ?? "noCookieDeviceId";
+
+      const device_id_status =
+        deviceId === cookieDeviceId ? "synced" : deviceId === "unknownDeviceId" ? "missing_mixpanel_device_id" : cookieDeviceId === "noCookieDeviceId" ? "missing_cookie" : "mismatch_cookie";
+
+      // 1) Track page view using server action
+      trackPageViewAction({
+        path: pathname,
+        $current_url: url.href,
+        client_device_id: deviceId,
+        cookie_device_id: cookieDeviceId,
+        device_id_status,
+        ...(deviceId !== "unknownDeviceId" ? { $device_id: deviceId } : {}),
+        ...(user ? { user_id: user.id } : {}),
+        ...utmParams,
+      }).catch((error) => {
+        console.error("Failed to track page view server action:", error);
+      });
+
+      // 2) Track page view using fetch, Add timestamp to prevent browser caching (cache busting)
+      fetch(`${API.MIXPANEL_TRACK.pageView}?t=${Date.now()}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          path: pathname,
+          $current_url: url.href,
+          callFrom: "client",
+          client_device_id: deviceId,
+          cookie_device_id: cookieDeviceId,
+          device_id_status,
+          ...(deviceId !== "unknownDeviceId" ? { $device_id: deviceId } : {}),
+          ...(user ? { user_id: user.id } : {}),
+          ...utmParams,
+        }),
+      }).catch((error) => {
+        console.error("Failed to track page view fetch:", error);
+      });
+    };
+
+    trackPageView().catch((error) => {
+      console.error("Failed to track page view general:", error);
+    });
+  }, [pathname, isLoaded, user]);
 
   return <>{children}</>;
 }

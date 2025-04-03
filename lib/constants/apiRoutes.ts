@@ -66,6 +66,9 @@ export const API = {
   JOB_CATEGORY: {
     getAll: "/api/job-category", // return all job categories
   },
+  MIXPANEL_TRACK: {
+    pageView: "/api/log",
+  },
 } as const;
 
 export const DB_RPC = {
