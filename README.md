@@ -2,6 +2,16 @@
 
 A community-driven platform that helps students and job seekers track their internship applications, share interview experiences, and discover tech opportunities.
 
+> **This isn’t a job scraper, or yet another job board.**  
+> _Think of it like the Internet Archive — but for job applications._ <br>
+> _Built by job applicants, for job applicants._
+
+
+> [!NOTE]
+> We're currently starting with a focus on **tech internship roles in Singapore**, as most of our early users are based there.  
+> That said, you're welcome to contribute even if you're applying to roles in other countries or outside of tech.
+
+
 ## Why use didtheyghost.me?
 
 See a job listing (e.g., on LinkedIn), apply for it, and haven’t heard back? Use **[didtheyghost.me](https://didtheyghost.me/?utm_source=githubrepob)** to check if others have received replies, interviews, or offers. It helps answer burning questions like:
@@ -83,3 +93,28 @@ public-hoist-pattern[]=*@heroui-org/*
 ```
 
 After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
+
+
+## Want to Contribute or Share Feedback?
+
+We're community-powered and always eager to hear from you!  
+Right now, we're focused on growing our user base and collecting feedback.
+
+You can help by:
+
+- Sharing the site with friends or communities
+- Tracking your own job applications
+- Sharing your interview or online assessment experiences
+- Suggesting features or improvements
+- Contributing to design, UX, dev or content improvements  
+- Helping verify or improve company and job data  
+- Reporting bugs or issues
+
+> [!TIP]
+> If you notice missing or incorrect data (e.g. a job location or company name), feel free to reach out directly.  
+> For example, if you're adding a job you applied to and the location you're looking for isn't listed 
+— like **"Seattle, WA, USA"** — let us know. As long as the job posting clearly mentions **"Seattle, WA, USA"**, we can add it.
+
+Whether you have feedback, want to help, or simply have a question — [contact us directly](https://didtheyghost.me/contact?utm_source=githubrepo&utm_medium=contact)
+ 
+
