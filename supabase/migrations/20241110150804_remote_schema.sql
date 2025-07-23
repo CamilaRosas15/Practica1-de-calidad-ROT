@@ -12,7 +12,9 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 
-CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";
+-- supabase upgraded to postgress 15.8.1.060 which removed the pgsodium schema by default.
+-- see: https://github.com/supabase/cli/issues/3358
+-- CREATE EXTENSION IF NOT EXISTS "pgsodium" WITH SCHEMA "pgsodium";
 
 
 
