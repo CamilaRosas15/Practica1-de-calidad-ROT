@@ -16,9 +16,9 @@
   "dependencies": {
     "@clerk/nextjs": "^5.5.2",
     "@clerk/themes": "^2.1.42",
-    "@heroui/react": "2.8.0",
+    "@heroui/react": "2.7.2",
     "@hookform/resolvers": "^3.9.0",
-    "@internationalized/date": "^3.8.2",
+    "@internationalized/date": "3.7.0",
     "@react-aria/ssr": "^3.9.2",
     "@react-aria/visually-hidden": "^3.8.10",
     "@supabase/supabase-js": "^2.45.3",
