@@ -1,20 +1,19 @@
 import useSWRMutation from "swr/mutation";
 
-import actionCreateApplication from "@/app/actions/createApplication";
+import actionCreateApplication, { CreateApplicationArgs } from "@/app/actions/createApplication";
 import { API } from "@/lib/constants/apiRoutes";
+
+type CreateApplicationParams = StrictOmit<CreateApplicationArgs, "job_posting_id">;
 
 export const useCreateApplication = (job_posting_id: string) => {
   const { trigger, isMutating } = useSWRMutation(API.APPLICATION.getAllByJobPostingId(job_posting_id), actionCreateApplication);
 
   return {
-    createApplication: async (applied_date: string) => {
-      try {
-        const result = await trigger({ job_posting_id, applied_date });
+    createApplication: async (params: CreateApplicationParams) => {
+      const result = await trigger({ job_posting_id, ...params });
 
-        return result;
-      } catch (err) {
-        console.error("Error creating application:", err);
-        throw err;
+      if (!result.isSuccess) {
+        throw new Error(result.error);
       }
     },
     isCreating: isMutating,

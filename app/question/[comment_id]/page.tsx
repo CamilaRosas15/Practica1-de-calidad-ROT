@@ -1,16 +1,15 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import useSWR from "swr";
 import { Card, CardBody, Avatar } from "@heroui/react";
 import mixpanel from "mixpanel-browser";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useAuth } from "@clerk/nextjs";
 
 import { CommentSection } from "./CommentSection";
 
 import { API } from "@/lib/constants/apiRoutes";
-import { fetcher } from "@/lib/fetcher";
 import { QuestionPageRequest } from "@/app/api/comment/[comment_id]/route";
 import { formatHowLongAgo } from "@/lib/formatDateUtils";
 import { ArrowLeftIcon, EditIcon } from "@/components/icons";
@@ -22,13 +21,16 @@ import { ErrorMessageContent } from "@/components/ErrorMessageContent";
 import { useUpdateComment } from "@/lib/hooks/useUpdateComment";
 import { EditCommentModal } from "@/components/EditCommentModal";
 import { CustomButton } from "@/components/CustomButton";
+import { useSWRWithAuthKey } from "@/lib/hooks/useSWRWithAuthKey";
 
 export default function QuestionPage() {
   const { comment_id } = useParams();
 
   const router = useRouter();
 
-  const { data: question, error, isLoading } = useSWR<QuestionPageRequest>(API.COMMENT.getById(comment_id as string), fetcher);
+  const { userId } = useAuth();
+
+  const { data: question, error, isLoading } = useSWRWithAuthKey<QuestionPageRequest>(API.COMMENT.getById(comment_id as string), userId);
 
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
 

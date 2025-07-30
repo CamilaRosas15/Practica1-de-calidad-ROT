@@ -31,3 +31,8 @@ type InterviewExperienceBase = Pick<InterviewExperienceTable, "id" | "round_no" 
 };
 
 export type InterviewExperienceCardData = InterviewExperienceBase & JoinedUser;
+
+// Server Actions Return Types, used for server actions that return a success or error
+export type ServerActionResult<TData = void, TError = string> = TData extends void
+  ? { isSuccess: true } | { isSuccess: false; error: TError }
+  : { isSuccess: true; data: TData } | { isSuccess: false; error: TError };

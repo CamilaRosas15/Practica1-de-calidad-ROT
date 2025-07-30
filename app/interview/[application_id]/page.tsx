@@ -6,6 +6,7 @@ import { Spacer } from "@heroui/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import mixpanel from "mixpanel-browser";
+import { useAuth } from "@clerk/nextjs";
 
 import { ViewInterviewDetails } from "./ViewInterviewDetails";
 import { EditInterviewDetails } from "./EditInterviewDetails";
@@ -25,13 +26,15 @@ import { LoadingContent } from "@/components/LoadingContent";
 import { ErrorMessageContent } from "@/components/ErrorMessageContent";
 import { DataNotFoundMessage } from "@/components/DataNotFoundMessage";
 import { CustomButton } from "@/components/CustomButton";
+import { useSWRWithAuthKey } from "@/lib/hooks/useSWRWithAuthKey";
 
 export default function InterviewExperiencePage() {
   const { application_id } = useParams();
   const router = useRouter();
+  const { userId } = useAuth();
 
   // Fetch application details
-  const { data: applicationDetails, error, isLoading } = useSWR<GetApplicationByIdResponse>(API.APPLICATION.getByApplicationId(application_id as string), fetcher);
+  const { data: applicationDetails, error, isLoading } = useSWRWithAuthKey<GetApplicationByIdResponse>(API.APPLICATION.getByApplicationId(application_id as string), userId);
 
   // Fetch interview rounds
   const {

@@ -14,6 +14,7 @@ export const ERROR_MESSAGES = {
   NOT_FOUND: "Not found",
   DUPLICATE_URL: "A company with this URL already exists.",
   DUPLICATE_NAME: "A company with this name already exists.",
+  DUPLICATE_APPLICATION: "You have already applied to this job.",
   // Add other error messages here
   TOO_MANY_REQUESTS: "Too many requests. Please try again later.",
 };
