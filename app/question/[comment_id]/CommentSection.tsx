@@ -4,14 +4,12 @@ import { Card, CardBody, Avatar, Textarea } from "@heroui/react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import useSWR from "swr";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, useAuth } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import mixpanel from "mixpanel-browser";
 import { useState } from "react";
 
 import { API } from "@/lib/constants/apiRoutes";
-import { fetcher } from "@/lib/fetcher";
 import { useCreateComment } from "@/lib/hooks/useCreateComment";
 import { AddCommentFormValues, addCommentSchema } from "@/lib/schema/addCommentSchema";
 import { CommentsForThisEntityResponse } from "@/app/api/comment/route";
@@ -25,6 +23,7 @@ import { EditIcon } from "@/components/icons";
 import { EditCommentModal } from "@/components/EditCommentModal";
 import { CustomButton } from "@/components/CustomButton";
 import { EmptyContent } from "@/components/EmptyContent";
+import { useSWRWithAuthKey } from "@/lib/hooks/useSWRWithAuthKey";
 
 type EditingComment = {
   id: string;
@@ -35,8 +34,9 @@ type CommentSectionProps = { entity_type: "question"; entity_id: string } | { en
 
 export function CommentSection({ entity_type, entity_id }: CommentSectionProps) {
   const pathname = usePathname();
+  const { userId } = useAuth();
 
-  const { data: comments, error: commentsError, isLoading: commentsLoading } = useSWR<CommentsForThisEntityResponse>(API.COMMENT.getAllByThisEntity(entity_id, entity_type), fetcher);
+  const { data: comments, error: commentsError, isLoading: commentsLoading } = useSWRWithAuthKey<CommentsForThisEntityResponse>(API.COMMENT.getAllByThisEntity(entity_id, entity_type), userId);
 
   // console.error("comments", comments);
 

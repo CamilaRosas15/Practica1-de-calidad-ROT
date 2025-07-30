@@ -5,7 +5,7 @@ import useSWR from "swr";
 import { Card, CardBody, CardHeader, Divider, LinkIcon, Link, useDisclosure, Tab, Tabs } from "@heroui/react";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { Key } from "react";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, useAuth } from "@clerk/nextjs";
 import mixpanel from "mixpanel-browser";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
@@ -25,13 +25,14 @@ import { API } from "@/lib/constants/apiRoutes";
 import { JOB_POST_PAGE_TABS } from "@/lib/constants/jobPostPageTabs";
 import { GetAllApplicationsByJobPostingIdResponse } from "@/app/api/job/[job_posting_id]/application/route";
 import { ImageWithFallback } from "@/components/ImageWithFallback";
-import { ERROR_MESSAGES, isRateLimitError } from "@/lib/errorHandling";
+import { ERROR_MESSAGES, getErrorMessage, isRateLimitError } from "@/lib/errorHandling";
 import { RateLimitErrorMessage } from "@/components/RateLimitErrorMessage";
 import { LoadingContent } from "@/components/LoadingContent";
 import { ErrorMessageContent } from "@/components/ErrorMessageContent";
 import { DataNotFoundMessage } from "@/components/DataNotFoundMessage";
 import { CustomButton } from "@/components/CustomButton";
 import { JobDetails } from "@/app/api/job/[job_posting_id]/route";
+import { useSWRWithAuthKey } from "@/lib/hooks/useSWRWithAuthKey";
 
 // Define the tab mapping
 const TABS = {
@@ -64,6 +65,8 @@ export default function JobDetailsPage() {
   const { job_posting_id } = useParams();
   const [selectedTab, setSelectedTab] = useQueryState("tab", parseAsStringLiteral(tabKeys).withDefault("Applied"));
 
+  const { userId } = useAuth();
+
   const { data: jobDetails, error, isLoading } = useSWR<JobDetails>(API.JOB_POSTING.getById(job_posting_id as string), fetcher);
 
   // console.log("jobDetails from page", jobDetails);
@@ -79,7 +82,7 @@ export default function JobDetailsPage() {
     data: applications,
     error: applicationsError,
     isLoading: applicationsIsLoading,
-  } = useSWR<GetAllApplicationsByJobPostingIdResponse>(API.APPLICATION.getAllByJobPostingId(job_posting_id as string), fetcher);
+  } = useSWRWithAuthKey<GetAllApplicationsByJobPostingIdResponse>(API.APPLICATION.getAllByJobPostingId(job_posting_id as string), userId);
 
   // console.warn("applications", applications);
 
@@ -109,36 +112,31 @@ export default function JobDetailsPage() {
 
   const handleTrackJobSubmit = async (appliedDateString: string) => {
     try {
-      mixpanel.track("Job Posting Page - Job Tracked Successfully", {
-        action: "track_this_job_submitted",
-        job_id: job_posting_id,
-        applied_date: appliedDateString,
-        job_title: jobDetails.title,
-        company_name: jobDetails.company.company_name,
-      });
-
-      await createApplication(appliedDateString);
+      await createApplication({ applied_date: appliedDateString, job_title: jobDetails.title, company_name: jobDetails.company.company_name });
 
       toast.success("Job tracked successfully");
 
       onTrackModalClose();
       // console.log("Application created", result);
-    } catch (err: unknown) {
+    } catch (err) {
       if (isRateLimitError(err)) {
         toast.error(ERROR_MESSAGES.TOO_MANY_REQUESTS);
 
         return; // Return early to avoid showing generic error
       }
 
-      mixpanel.track("Job Posting Page", {
-        action: "track_this_job_error",
-        job_id: job_posting_id,
-        error: err instanceof Error ? err.message : "Unknown error occurred",
-        job_title: jobDetails.title,
-        company_name: jobDetails.company.company_name,
+      toast.error("Error tracking job", {
+        description: getErrorMessage(err),
+        cancel: {
+          label: "X",
+          onClick: () => toast.dismiss(),
+        },
+        cancelButtonStyle: {
+          color: "inherit",
+          backgroundColor: "inherit",
+        },
       });
-      toast.error("Error tracking job");
-      console.error("Error creating application:", err);
+      // console.error("Error creating application:", err);
     }
   };
 
