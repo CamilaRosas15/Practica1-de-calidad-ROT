@@ -1,12 +1,10 @@
-import useSWRMutation from "swr/mutation";
-import { mutate } from "swr";
-
 import { API } from "@/lib/constants/apiRoutes";
 import { InterviewExperienceFormValues } from "@/lib/schema/updateInterviewRoundSchema";
 import actionUpdateApplicationAndInterviewRounds from "@/app/actions/updateApplicationAndInterviewRounds";
+import { ClerkAuthUserId, mutateWithAuthKey, useSWRMutationWithAuthKey } from "@/lib/hooks/useSWRWithAuthKey";
 
-export const useUpdateApplicationAndInterviewRounds = (application_id: string) => {
-  const { trigger, isMutating } = useSWRMutation(API.INTERVIEW.getAllByApplicationId(application_id), actionUpdateApplicationAndInterviewRounds);
+export const useUpdateApplicationAndInterviewRounds = (application_id: string, userId: ClerkAuthUserId) => {
+  const { trigger, isMutating } = useSWRMutationWithAuthKey(API.INTERVIEW.getAllByApplicationId(application_id), userId, actionUpdateApplicationAndInterviewRounds);
 
   return {
     updateApplicationAndInterviewRounds: async (data: InterviewExperienceFormValues) => {
@@ -16,7 +14,7 @@ export const useUpdateApplicationAndInterviewRounds = (application_id: string) =
           application_id,
         });
 
-        mutate(API.APPLICATION.getByApplicationId(application_id));
+        mutateWithAuthKey(API.APPLICATION.getByApplicationId(application_id), userId);
       } catch (err) {
         console.error("Error updating application and interview rounds:", err);
         throw err;

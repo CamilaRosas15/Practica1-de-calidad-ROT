@@ -11,7 +11,7 @@ const useCreateJob = (company_id: string) => {
     createJob: async (newJob: AddJobFormData, company_name: string) => {
       const result = await trigger({ company_id, newJob, company_name });
 
-      if (!result.success) {
+      if (!result.isSuccess) {
         // Create an error object with the returned error message
         throw new Error(result.error);
       }

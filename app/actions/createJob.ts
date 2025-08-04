@@ -9,16 +9,14 @@ import { DB_RPC } from "@/lib/constants/apiRoutes";
 import { isLinkedInDomain } from "@/lib/extractDomain";
 import { mpServerTrack } from "@/lib/mixpanelServer";
 import { ERROR_MESSAGES, isRateLimitError } from "@/lib/errorHandling";
+import { ServerActionResult } from "@/lib/sharedTypes";
 
 export type CreateJobArgs = Pick<JobPostingTable, "company_id"> & {
   newJob: AddJobFormData;
   company_name: string;
 };
 
-// Define a response type for success/error states
-type JobActionResult = { success: true } | { success: false; error: string };
-
-const actionCreateJob = async (key: string, { arg }: { arg: CreateJobArgs }): Promise<JobActionResult> => {
+const actionCreateJob = async (key: string, { arg }: { arg: CreateJobArgs }): Promise<ServerActionResult> => {
   try {
     return await withRateLimit(async (user_id) => {
       const supabase = await createClerkSupabaseClientSsr();
@@ -57,7 +55,7 @@ const actionCreateJob = async (key: string, { arg }: { arg: CreateJobArgs }): Pr
             user_id,
           });
 
-          return { success: false, error: error.message };
+          return { isSuccess: false, error: error.message };
         }
 
         // Track success on server
@@ -72,7 +70,7 @@ const actionCreateJob = async (key: string, { arg }: { arg: CreateJobArgs }): Pr
           user_id,
         });
 
-        return { success: true };
+        return { isSuccess: true };
       } catch (err) {
         // Determine error message
         console.error("Create Job error:", err);
@@ -92,7 +90,7 @@ const actionCreateJob = async (key: string, { arg }: { arg: CreateJobArgs }): Pr
           user_id,
         });
 
-        return { success: false, error: errorMessage };
+        return { isSuccess: false, error: errorMessage };
       }
     }, "CreateJob");
   } catch (error) {
@@ -101,12 +99,12 @@ const actionCreateJob = async (key: string, { arg }: { arg: CreateJobArgs }): Pr
 
     // Use your type guard to check for rate limit errors
     if (isRateLimitError(error)) {
-      return { success: false, error: ERROR_MESSAGES.TOO_MANY_REQUESTS };
+      return { isSuccess: false, error: ERROR_MESSAGES.TOO_MANY_REQUESTS };
     }
 
     // For any other errors from withRateLimit
     return {
-      success: false,
+      isSuccess: false,
       error: error instanceof Error ? error.message : "Unknown error occurred",
     };
   }

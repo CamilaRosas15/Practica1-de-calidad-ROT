@@ -86,7 +86,7 @@ export default function JobDetailsPage() {
 
   // console.warn("applications", applications);
 
-  const { createApplication, isCreating } = useCreateApplication(job_posting_id as string);
+  const { createApplication, isCreating } = useCreateApplication(job_posting_id as string, userId);
 
   if (isLoading || applicationsIsLoading) return <LoadingContent />;
   if (error || applicationsError) {
