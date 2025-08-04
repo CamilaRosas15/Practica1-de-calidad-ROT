@@ -9,11 +9,11 @@ import { DBTable } from "@/lib/constants/dbTables";
 import { withRateLimit } from "@/lib/withRateLimit";
 import { extractDomain } from "@/lib/extractDomain";
 import { mpServerTrack } from "@/lib/mixpanelServer";
+import { ServerActionResult } from "@/lib/sharedTypes";
 
-// Define a return type that includes success/error states
-type CompanyActionResult = { success: true } | { success: false; error: string };
+// TODO Aug: use safeParse instead of parse. refactor rate limit, remove try catch outer
 
-const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: CompanyFormData }): Promise<CompanyActionResult> => {
+const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: CompanyFormData }): Promise<ServerActionResult> => {
   try {
     return await withRateLimit(async (user_id) => {
       const supabase = await createClerkSupabaseClientSsr();
@@ -41,15 +41,15 @@ const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: Comp
             });
 
             if (error.message.includes("company_name")) {
-              return { success: false, error: ERROR_MESSAGES.DUPLICATE_NAME };
+              return { isSuccess: false, error: ERROR_MESSAGES.DUPLICATE_NAME };
             }
 
             if (error.message.includes("company_url")) {
-              return { success: false, error: ERROR_MESSAGES.DUPLICATE_URL };
+              return { isSuccess: false, error: ERROR_MESSAGES.DUPLICATE_URL };
             }
           }
 
-          return { success: false, error: error.message };
+          return { isSuccess: false, error: error.message };
         }
 
         await mpServerTrack("Company Added Success", {
@@ -58,7 +58,7 @@ const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: Comp
           user_id,
         });
 
-        return { success: true };
+        return { isSuccess: true };
       } catch (err) {
         // Add general error tracking for non-duplicate errors
         console.error("Create Company error:", err);
@@ -73,7 +73,7 @@ const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: Comp
         });
 
         return {
-          success: false,
+          isSuccess: false,
           error: errorMessage,
         };
       }
@@ -84,12 +84,12 @@ const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: Comp
 
     // Use your type guard to check for rate limit errors
     if (isRateLimitError(error)) {
-      return { success: false, error: ERROR_MESSAGES.TOO_MANY_REQUESTS };
+      return { isSuccess: false, error: ERROR_MESSAGES.TOO_MANY_REQUESTS };
     }
 
     // For any other errors from withRateLimit
     return {
-      success: false,
+      isSuccess: false,
       error: error instanceof Error ? error.message : "Unknown error occurred",
     };
   }

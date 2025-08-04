@@ -44,7 +44,7 @@ export default function InterviewExperiencePage() {
   } = useSWR<InterviewExperienceCardData[]>(API.INTERVIEW.getAllByApplicationId(application_id as string), fetcher);
 
   // Update application and interview rounds
-  const { updateApplicationAndInterviewRounds, isUpdating } = useUpdateApplicationAndInterviewRounds(application_id as string);
+  const { updateApplicationAndInterviewRounds, isUpdating } = useUpdateApplicationAndInterviewRounds(application_id as string, userId);
 
   // local states
   const [isEditing, setIsEditing] = useState(false);

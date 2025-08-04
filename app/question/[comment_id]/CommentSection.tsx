@@ -40,18 +40,24 @@ export function CommentSection({ entity_type, entity_id }: CommentSectionProps) 
 
   // console.error("comments", comments);
 
-  const { createComment, isCreating } = useCreateComment({
-    entity_type,
-    entity_id,
-  });
+  const { createComment, isCreating } = useCreateComment(
+    {
+      entity_type,
+      entity_id,
+    },
+    userId,
+  );
 
   const [editingComment, setEditingComment] = useState<EditingComment>(null);
 
-  const { updateComment, isUpdating } = useUpdateComment({
-    entity_type,
-    comment_id: editingComment?.id || "",
-    entity_id,
-  });
+  const { updateComment, isUpdating } = useUpdateComment(
+    {
+      entity_type,
+      comment_id: editingComment?.id || "",
+      entity_id,
+    },
+    userId,
+  );
 
   const handleSubmitEditComment = async (content: string) => {
     try {

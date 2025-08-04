@@ -34,10 +34,13 @@ export default function QuestionPage() {
 
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
 
-  const { updateComment, isUpdating } = useUpdateComment({
-    entity_type: "job_posting",
-    comment_id: editingCommentId || "",
-  });
+  const { updateComment, isUpdating } = useUpdateComment(
+    {
+      entity_type: "job_posting",
+      comment_id: editingCommentId || "",
+    },
+    userId,
+  );
 
   if (isLoading) return <LoadingContent />;
   if (error) {

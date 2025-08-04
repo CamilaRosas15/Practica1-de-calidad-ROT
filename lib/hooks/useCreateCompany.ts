@@ -12,12 +12,10 @@ const useCreateCompany = () => {
     createCompany: async (newCompany: CompanyFormData) => {
       const result = await trigger(newCompany);
 
-      if (!result.success) {
+      if (!result.isSuccess) {
         // Create an error object with the returned error message
         throw new Error(result.error);
       }
-
-      return true;
     },
     isCreating: isMutating,
   };

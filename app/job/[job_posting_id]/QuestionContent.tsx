@@ -1,17 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
-import useSWR from "swr";
 import { Card, CardBody, Spacer, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Textarea, Avatar } from "@heroui/react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, useAuth } from "@clerk/nextjs";
 import mixpanel from "mixpanel-browser";
 
 import { useCreateComment } from "@/lib/hooks/useCreateComment";
-import { fetcher } from "@/lib/fetcher";
 import { API } from "@/lib/constants/apiRoutes";
 import { addQuestionSchema, AddQuestionFormValues } from "@/lib/schema/addQuestionSchema";
 import { QuestionWithReplyCountResponse } from "@/app/api/comment/route";
@@ -22,6 +20,7 @@ import { LoadingContent } from "@/components/LoadingContent";
 import { ErrorMessageContent } from "@/components/ErrorMessageContent";
 import { DataNotFoundMessage } from "@/components/DataNotFoundMessage";
 import { CustomButton } from "@/components/CustomButton";
+import { useSWRWithAuthKey } from "@/lib/hooks/useSWRWithAuthKey";
 
 type QuestionContentProps = {
   job_posting_id: string;
@@ -30,6 +29,7 @@ type QuestionContentProps = {
 export function QuestionContent({ job_posting_id }: QuestionContentProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { userId } = useAuth();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -40,12 +40,15 @@ export function QuestionContent({ job_posting_id }: QuestionContentProps) {
     },
   });
 
-  const { data: questions = [], error, isLoading } = useSWR<QuestionWithReplyCountResponse[]>(API.COMMENT.getAllByThisEntity(job_posting_id, "job_posting"), fetcher);
+  const { data: questions = [], error, isLoading } = useSWRWithAuthKey<QuestionWithReplyCountResponse[]>(API.COMMENT.getAllByThisEntity(job_posting_id, "job_posting"), userId);
 
-  const { createComment, isCreating } = useCreateComment({
-    entity_type: "job_posting",
-    entity_id: job_posting_id,
-  });
+  const { createComment, isCreating } = useCreateComment(
+    {
+      entity_type: "job_posting",
+      entity_id: job_posting_id,
+    },
+    userId,
+  );
 
   const onSubmit = async (data: AddQuestionFormValues) => {
     try {
