@@ -66,15 +66,24 @@ See a job listing (e.g., on LinkedIn), apply for it, and haven’t heard back? U
 - [React Hook Form](https://react-hook-form.com/) – Form state and validation  
 - [Zod](https://zod.dev/) – Schema validation and runtime type safety  
 - [Upstash](https://upstash.com/) – Rate limiting  
+
+
 ## How to Use
 
 ### Install dependencies
 
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
+Ensure you're using the correct Node.js version, using [nvm](https://github.com/nvm-sh/nvm):
 
 ```bash
-npm install
+nvm use # Uses the version specified in .nvmrc
 ```
+
+Install dependencies using your preferred package manager (`npm`, `yarn`, `pnpm`, `bun`):
+
+```bash
+npm ci # For npm - installs exact versions from package-lock.json
+```
+
 
 ### Run the development server
 
