@@ -57,10 +57,6 @@ export function CreateCompanyModal({ isOpen, onClose, onSubmitSuccess }: CreateC
           label: "X",
           onClick: () => toast.dismiss(),
         },
-        cancelButtonStyle: {
-          color: "inherit",
-          backgroundColor: "inherit",
-        },
       });
     }
   };

@@ -367,8 +367,6 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
                                 type="number"
                                 value={question.question_number > 0 ? question.question_number.toString() : ""} // Show empty string for invalid values
                                 onChange={(e) => {
-                                  trackLeetcodeQuestionRemove(index, qIndex);
-
                                   const newQuestions = [...(field.value || [])];
                                   const value = parseInt(e.target.value);
 
@@ -391,9 +389,11 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
                                 color="danger"
                                 size="sm"
                                 onClick={() => {
+                                  trackLeetcodeQuestionRemove(index, qIndex);
+
                                   const newQuestions = field.value?.filter((_, i) => i !== qIndex);
 
-                                  field.onChange(newQuestions?.length ? newQuestions : null);
+                                  field.onChange(newQuestions?.length ? newQuestions : []);
                                 }}
                               >
                                 Remove

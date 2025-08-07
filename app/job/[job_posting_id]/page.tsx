@@ -131,10 +131,6 @@ export default function JobDetailsPage() {
           label: "X",
           onClick: () => toast.dismiss(),
         },
-        cancelButtonStyle: {
-          color: "inherit",
-          backgroundColor: "inherit",
-        },
       });
       // console.error("Error creating application:", err);
     }

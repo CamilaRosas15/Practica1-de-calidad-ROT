@@ -31,7 +31,7 @@ export const interviewRoundSchema = z.object({
     .nullable()
     .default([])
     .superRefine((questions, ctx) => {
-      if (!questions) return true;
+      if (!questions) return;
 
       // Track seen numbers and their indices
       const seen = new Map<number, number>();

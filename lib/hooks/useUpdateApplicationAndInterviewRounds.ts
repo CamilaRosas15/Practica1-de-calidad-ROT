@@ -14,7 +14,7 @@ export const useUpdateApplicationAndInterviewRounds = (application_id: string, u
           application_id,
         });
 
-        mutateWithAuthKey(API.APPLICATION.getByApplicationId(application_id), userId);
+        mutateWithAuthKey(API.APPLICATION.getByApplicationId(application_id), userId); // Only need to manually mutate applicationDetails as they share hook
       } catch (err) {
         console.error("Error updating application and interview rounds:", err);
         throw err;

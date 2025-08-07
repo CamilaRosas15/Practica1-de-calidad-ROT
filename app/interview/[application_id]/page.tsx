@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import useSWR from "swr";
 import { Spacer } from "@heroui/react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -11,7 +10,6 @@ import { useAuth } from "@clerk/nextjs";
 import { ViewInterviewDetails } from "./ViewInterviewDetails";
 import { EditInterviewDetails } from "./EditInterviewDetails";
 
-import { fetcher } from "@/lib/fetcher";
 import { API } from "@/lib/constants/apiRoutes";
 import { ArrowLeftIcon } from "@/components/icons";
 import { INTERVIEW_FORM_ID, InterviewExperienceFormValues } from "@/lib/schema/updateInterviewRoundSchema";
@@ -36,12 +34,12 @@ export default function InterviewExperiencePage() {
   // Fetch application details
   const { data: applicationDetails, error, isLoading } = useSWRWithAuthKey<GetApplicationByIdResponse>(API.APPLICATION.getByApplicationId(application_id as string), userId);
 
-  // Fetch interview rounds
+  // Fetch interview rounds, need useSWRWithAuthKey too to match the shared update mutation hook's cache key
   const {
     data: interviewRounds,
     error: interviewRoundsError,
     isLoading: interviewRoundsLoading,
-  } = useSWR<InterviewExperienceCardData[]>(API.INTERVIEW.getAllByApplicationId(application_id as string), fetcher);
+  } = useSWRWithAuthKey<InterviewExperienceCardData[]>(API.INTERVIEW.getAllByApplicationId(application_id as string), userId);
 
   // Update application and interview rounds
   const { updateApplicationAndInterviewRounds, isUpdating } = useUpdateApplicationAndInterviewRounds(application_id as string, userId);
