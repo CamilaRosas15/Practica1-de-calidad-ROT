@@ -8,7 +8,7 @@ import mixpanel from "mixpanel-browser";
 
 import { InterviewTagsModal, utilSortInterviewTags } from "./InterviewTagsModal";
 
-import { INTERVIEW_FORM_ID, InterviewExperienceFormValues, UpdateInterviewExperienceFormSchema } from "@/lib/schema/updateInterviewRoundSchema";
+import { DEFAULT_QUESTION_NUMBER, INTERVIEW_FORM_ID, InterviewExperienceFormValues, UpdateInterviewExperienceFormSchema } from "@/lib/schema/updateInterviewRoundSchema";
 import { InterviewExperienceCardData } from "@/lib/sharedTypes";
 import { APPLICATION_STATUS } from "@/lib/constants/applicationStatus";
 import { GetApplicationByIdResponse } from "@/app/api/application/[application_id]/route";
@@ -58,6 +58,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
 
   const handleAddNewInterviewRoundClick = async () => {
     const isFormValid = await methods.trigger();
+    const isNewRoundAllowed = canAddNewRound();
 
     mixpanel.track("Interview Experience Edit", {
       action: "add_round_attempted",
@@ -65,13 +66,13 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
       current_rounds: fields.length,
       is_form_valid: isFormValid,
       error: methods.formState.errors,
-      can_add_round: canAddNewRound(),
+      can_add_round: isNewRoundAllowed,
     });
 
     if (!isFormValid) {
       toast.error("Please fix the errors in the form before adding a new one.");
     } else {
-      if (canAddNewRound()) {
+      if (isNewRoundAllowed) {
         append({
           description: "",
           interview_date: today(getLocalTimeZone()).toString(),
@@ -96,6 +97,8 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
       error: methods.formState.errors,
     });
   });
+
+  // #region mixpanel tracking functions
 
   const trackStatusChange = (value: string) => {
     mixpanel.track("Interview Experience Edit", {
@@ -140,6 +143,18 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
       round_number: roundIndex + 1,
       question_index: questionIndex,
     });
+  };
+
+  // #endregion
+
+  const getQuestionFieldError = (index: number, qIndex: number) => {
+    return methods.formState.errors?.interviewRounds?.[index]?.leetcode_questions?.[qIndex]?.question_number;
+  };
+
+  const checkQuestionFieldTouched = (index: number, qIndex: number) => {
+    const touched = methods.formState.touchedFields?.interviewRounds?.[index]?.leetcode_questions;
+
+    return Array.isArray(touched) && touched[qIndex]?.question_number;
   };
 
   return (
@@ -345,7 +360,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
                               field.onChange([
                                 ...(field.value || []),
                                 {
-                                  question_number: 1,
+                                  question_number: DEFAULT_QUESTION_NUMBER,
                                 },
                               ]);
                             }}
@@ -355,51 +370,61 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
                         </div>
 
                         {field.value &&
-                          field.value.map((question, qIndex) => (
-                            <div key={qIndex} className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-center">
-                              <Input
-                                isRequired
-                                className="flex-1"
-                                errorMessage={methods.formState.errors?.interviewRounds?.[index]?.leetcode_questions?.[qIndex]?.question_number?.message}
-                                isInvalid={!!methods.formState.errors?.interviewRounds?.[index]?.leetcode_questions?.[qIndex]?.question_number}
-                                label="Question Number"
-                                placeholder="Enter LeetCode question number"
-                                type="number"
-                                value={question.question_number > 0 ? question.question_number.toString() : ""} // Show empty string for invalid values
-                                onChange={(e) => {
-                                  const newQuestions = [...(field.value || [])];
-                                  const value = parseInt(e.target.value);
+                          field.value.map((question, qIndex) => {
+                            const questionFieldError = getQuestionFieldError(index, qIndex);
 
-                                  newQuestions[qIndex] = {
-                                    ...newQuestions[qIndex],
-                                    question_number: value,
-                                  };
-                                  field.onChange(newQuestions);
-                                }}
-                                onKeyDown={(e) => {
-                                  // Prevent minus sign and decimal point
-                                  if (e.key === "-" || e.key === ".") {
-                                    e.preventDefault();
-                                  }
-                                }}
-                              />
+                            const isQuestionFieldTouched = checkQuestionFieldTouched(index, qIndex);
 
-                              <CustomButton
-                                className="w-full sm:w-auto"
-                                color="danger"
-                                size="sm"
-                                onClick={() => {
-                                  trackLeetcodeQuestionRemove(index, qIndex);
+                            // Show error if:
+                            // 1. Field has been changed from default (not 1) OR
+                            // 2. Field was touched OR
+                            // 3. Form was submitted
+                            const shouldShowError = question.question_number !== DEFAULT_QUESTION_NUMBER || isQuestionFieldTouched || methods.formState.isSubmitted;
 
-                                  const newQuestions = field.value?.filter((_, i) => i !== qIndex);
+                            return (
+                              <div key={qIndex} className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-center">
+                                <Input
+                                  isRequired
+                                  className="flex-1"
+                                  errorMessage={shouldShowError ? questionFieldError?.message : undefined}
+                                  isInvalid={!!(shouldShowError && questionFieldError)}
+                                  label="Question Number"
+                                  placeholder="Enter LeetCode question number"
+                                  type="number"
+                                  value={question.question_number == null ? "" : String(question.question_number)}
+                                  onChange={(e) => {
+                                    const newQuestions = [...(field.value || [])];
+                                    const parsedValue = parseInt(e.target.value, 10);
 
-                                  field.onChange(newQuestions?.length ? newQuestions : []);
-                                }}
-                              >
-                                Remove
-                              </CustomButton>
-                            </div>
-                          ))}
+                                    newQuestions[qIndex] = {
+                                      ...newQuestions[qIndex],
+                                      question_number: e.target.value === "" ? null : parsedValue,
+                                    };
+                                    field.onChange(newQuestions);
+                                  }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "-" || e.key === ".") {
+                                      e.preventDefault();
+                                    }
+                                  }}
+                                />
+
+                                <CustomButton
+                                  className="w-full sm:w-auto"
+                                  color="danger"
+                                  size="sm"
+                                  onClick={() => {
+                                    trackLeetcodeQuestionRemove(index, qIndex);
+                                    const newQuestions = field.value?.filter((_, i) => i !== qIndex);
+
+                                    field.onChange(newQuestions?.length ? newQuestions : []);
+                                  }}
+                                >
+                                  Remove
+                                </CustomButton>
+                              </div>
+                            );
+                          })}
                       </div>
                     )}
                   />
