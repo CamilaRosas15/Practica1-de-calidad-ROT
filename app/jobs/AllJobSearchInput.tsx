@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Input } from "@heroui/react";
-import { createParser, parseAsArrayOf, useQueryStates } from "nuqs";
+import { useQueryStates } from "nuqs";
 import useSWR from "swr";
 import mixpanel from "mixpanel-browser";
 
@@ -14,6 +14,7 @@ import { API } from "@/lib/constants/apiRoutes";
 import { fetcher } from "@/lib/fetcher";
 import { SettingsJobSearchResponse } from "@/app/api/(protected)/settings/job-search/route";
 import { JobSortOrderKey, nuqsJobSearchParamSchema } from "@/lib/schema/nuqsJobSearchParamSchema";
+import { createFilterValidCountries, filterValidExperienceLevels, filterValidJobCategories, getValidOrDefaults } from "@/lib/nuqsJobSearchParamFilter";
 
 type AllJobSearchInputProps = {
   search: string;
@@ -26,7 +27,6 @@ export function AllJobSearchInput({ search, onSearchChange }: AllJobSearchInputP
       available_countries: [],
       all_experience_levels: [],
       all_job_categories: [],
-
       default_countries: [],
       default_experience_levels: [],
       default_job_categories: [],
@@ -36,45 +36,35 @@ export function AllJobSearchInput({ search, onSearchChange }: AllJobSearchInputP
 
   // console.warn("settingsPreferences", settingsPreferences);
 
-  const parseAsJobCategory = createParser({
-    parse: (value: string): JobCategoryName | null => {
-      if (!settingsPreferences.all_job_categories.includes(value as JobCategoryName)) {
-        mixpanel.track("All Jobs Filter invalid job category", {
-          job_category: value,
-        });
-      }
-
-      return settingsPreferences.all_job_categories.includes(value as JobCategoryName) ? (value as JobCategoryName) : null;
-    },
-    serialize: (value: JobCategoryName): string => value,
-  });
-
-  const parseAsExperienceLevel = createParser({
-    parse: (value: string): ExperienceLevel | null => {
-      if (!settingsPreferences.all_experience_levels.includes(value as ExperienceLevel)) {
-        mixpanel.track("All Jobs Filter invalid experience level", {
-          experience_level: value,
-        });
-      }
-
-      return settingsPreferences.all_experience_levels.includes(value as ExperienceLevel) ? (value as ExperienceLevel) : null;
-    },
-    serialize: (value: ExperienceLevel): string => value,
-  });
-
-  const [{ isVerified, countries, sortOrder, experienceLevelNames, page, jobCategoryNames }, setQueryStates] = useQueryStates({
-    ...nuqsJobSearchParamSchema, // Spread the general schema
-    experienceLevelNames: parseAsArrayOf(parseAsExperienceLevel).withDefault([]),
-    jobCategoryNames: parseAsArrayOf(parseAsJobCategory).withDefault([]),
-  });
-
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+
+  const [{ isVerified, countries, sortOrder, experienceLevelNames, page, jobCategoryNames }, setQueryStates] = useQueryStates(nuqsJobSearchParamSchema);
+
+  // #region UI-level validation - filter out invalid values when displaying or when URL missing param (default)
+  const uiExperienceLevelNames = getValidOrDefaults({
+    values: experienceLevelNames,
+    filterFn: filterValidExperienceLevels,
+    defaults: settingsPreferences.default_experience_levels,
+  });
+
+  const uiJobCategoryNames = getValidOrDefaults({
+    values: jobCategoryNames,
+    filterFn: filterValidJobCategories,
+    defaults: settingsPreferences.default_job_categories,
+  });
+
+  const uiCountries = getValidOrDefaults({
+    values: countries,
+    filterFn: createFilterValidCountries(settingsPreferences.available_countries),
+    defaults: settingsPreferences.default_countries,
+  });
+  // #endregion
 
   const handleCountriesChange = (selectedCountries: string[]) => {
     mixpanel.track("All Jobs Action", {
       action: "countries_changed",
       countries: selectedCountries,
-      search: search,
+      search,
       is_verified: isVerified,
       sort_order: sortOrder,
       experience_level_names: experienceLevelNames,
@@ -88,8 +78,8 @@ export function AllJobSearchInput({ search, onSearchChange }: AllJobSearchInputP
     mixpanel.track("All Jobs Action", {
       action: "verified_jobs_toggled",
       is_verified: `from ${isVerified} to ${isSelected}`,
-      search: search,
-      countries: countries,
+      search,
+      countries,
       sort_order: sortOrder,
       experience_level_names: experienceLevelNames,
       page,
@@ -102,8 +92,8 @@ export function AllJobSearchInput({ search, onSearchChange }: AllJobSearchInputP
     mixpanel.track("All Jobs Filter", {
       action: "sort_changed",
       sort_order: newOrder,
-      search: search,
-      countries: countries,
+      search,
+      countries,
       is_verified: isVerified,
       experience_level_names: experienceLevelNames,
       page,
@@ -116,8 +106,8 @@ export function AllJobSearchInput({ search, onSearchChange }: AllJobSearchInputP
     mixpanel.track("All Jobs Action", {
       action: "experience_level_changed",
       experience_level_names: newExperienceLevelNames,
-      search: search,
-      countries: countries,
+      search,
+      countries,
       is_verified: isVerified,
       sort_order: sortOrder,
       page,
@@ -157,9 +147,9 @@ export function AllJobSearchInput({ search, onSearchChange }: AllJobSearchInputP
           isOpen={isFilterModalOpen}
           isVerified={isVerified}
           jobCategories={settingsPreferences.all_job_categories}
-          selectedCountries={countries.length > 0 ? countries : settingsPreferences.default_countries}
-          selectedExperienceLevelNames={experienceLevelNames.length > 0 ? experienceLevelNames : settingsPreferences.default_experience_levels}
-          selectedJobCategoryNames={jobCategoryNames.length > 0 ? jobCategoryNames : settingsPreferences.default_job_categories}
+          selectedCountries={uiCountries}
+          selectedExperienceLevelNames={uiExperienceLevelNames}
+          selectedJobCategoryNames={uiJobCategoryNames}
           sortOrder={sortOrder}
           onClose={() => setIsFilterModalOpen(false)}
           onCountriesChange={handleCountriesChange}

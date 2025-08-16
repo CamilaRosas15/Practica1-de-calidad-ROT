@@ -36,3 +36,21 @@ export type InterviewExperienceCardData = InterviewExperienceBase & JoinedUser;
 export type ServerActionResult<TData = void, TError = string> = TData extends void
   ? { isSuccess: true } | { isSuccess: false; error: TError }
   : { isSuccess: true; data: TData } | { isSuccess: false; error: TError };
+
+/** Compile-time assertion helper.
+ * Usage: type _Check = Expect<SomeCondition extends true ? true : false>;
+ * If the condition isn't true, TypeScript surfaces an error.
+ */
+export type Expect<T extends true> = T;
+
+type MissingOf<U, T extends readonly unknown[]> = Exclude<U, T[number]>;
+
+type ExtraOf<U, T extends readonly unknown[]> = Exclude<T[number], U>;
+
+/** Exact literal equality check.
+ * - Returns true when U exactly matches the element union of T.
+ * - Otherwise returns a tuple with a label and the specific missing/extra members.
+ */
+export type ExactLiteralUnion<U, T extends readonly unknown[]> = [MissingOf<U, T>, ExtraOf<U, T>] extends [never, never]
+  ? true
+  : ["Literal mismatch", { missing: MissingOf<U, T> }, { extra: ExtraOf<U, T> }];
