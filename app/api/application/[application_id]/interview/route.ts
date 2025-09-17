@@ -10,7 +10,6 @@ export async function GET(request: Request, { params }: { params: { application_
     p_application_id: params.application_id,
   });
 
-  // console.warn("data in route handler all interview rounds", data, error);
 
   if (error) {
     console.error("error in route handler all interview rounds", error);

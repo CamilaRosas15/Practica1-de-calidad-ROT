@@ -63,7 +63,6 @@ export async function GET() {
 
   const { data: jobs, error } = await supabase.from(DBTable.JOB_POSTING).select(selectString).order("updated_at", { ascending: false });
 
-  // console.warn("jobs admin", jobs);
 
   if (error) {
     console.error("Error fetching jobs:", error);
