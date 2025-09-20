@@ -47,8 +47,6 @@ export function OnlineAssessmentContent({ job_posting_id }: OnlineAssessmentCont
 
   const router = useRouter();
 
-  // console.warn("onlineAssessments", onlineAssessments);
-
   if (isLoading) return <LoadingContent />;
   if (error) {
     if (isRateLimitError(error)) {
