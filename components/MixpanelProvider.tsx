@@ -114,8 +114,6 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
       return;
     }
 
-    // mixpanel.track("Page View", { path: pathname });
-
     const trackPageView = async () => {
       const url = new URL(window.location.href);
       const utmParams = Object.fromEntries(Array.from(url.searchParams.entries()).filter(([key]) => key.startsWith("utm_")));
