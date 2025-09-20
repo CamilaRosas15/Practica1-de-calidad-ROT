@@ -37,8 +37,6 @@ export default function CompanyDetailsPage() {
 
   const { data: allJobs, error: jobError, isLoading: jobIsLoading } = useSWR<CompanyDetailsPageAllJobsResponse[]>(API.JOB_POSTING.getAllByCompanyId(company_id as string), fetcher);
 
-  // console.warn("jobs", allJobs);
-
   const {
     data: settingsPreferences = {
       all_countries: [],
