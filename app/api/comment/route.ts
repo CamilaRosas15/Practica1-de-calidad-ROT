@@ -29,8 +29,6 @@ export async function GET(request: NextRequest) {
     // For job postings, fetch questions with reply counts
     const { data, error } = await supabase.rpc(DB_RPC.GET_QUESTIONS_WITH_REPLY_COUNTS, { job_posting_id: entity_id });
 
-    // console.log("data", data, "error", error);
-
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
