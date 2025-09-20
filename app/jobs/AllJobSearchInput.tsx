@@ -34,8 +34,6 @@ export function AllJobSearchInput({ search, onSearchChange }: AllJobSearchInputP
     isLoading,
   } = useSWR<SettingsJobSearchResponse>(API.PROTECTED.getJobSearchSettings, fetcher);
 
-  // console.warn("settingsPreferences", settingsPreferences);
-
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const [{ isVerified, countries, sortOrder, experienceLevelNames, page, jobCategoryNames }, setQueryStates] = useQueryStates(nuqsJobSearchParamSchema);
