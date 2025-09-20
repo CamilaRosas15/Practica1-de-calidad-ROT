@@ -49,7 +49,6 @@ export function JobPostingEditForm({
     },
   });
 
-  // console.warn("experience levels", experienceLevels, "current", jobPosting.job_posting_experience_level);
 
   const { updateJobPosting, isUpdating } = useUpdateJobPostingAdmin(jobPosting.id);
 
