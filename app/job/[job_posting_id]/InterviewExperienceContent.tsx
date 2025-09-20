@@ -27,7 +27,6 @@ export function InterviewExperienceContent({ job_posting_id }: InterviewExperien
 
   const { data: applicationsWithCounts, error, isLoading } = useSWR<JobPostPageInterviewData[]>(API.INTERVIEW.getAllByJobPostingId(job_posting_id), fetcher);
 
-  // console.log("applications@@@@@@@ for interview experiences", applicationsWithCounts);
 
   const router = useRouter();
 
