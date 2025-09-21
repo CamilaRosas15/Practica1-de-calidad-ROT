@@ -11,7 +11,6 @@ type InterviewExperienceCardProps = {
 };
 
 export function InterviewExperienceCard({ interviewExperience }: InterviewExperienceCardProps) {
-  // console.log("this interview experience", interviewExperience);
 
   return (
     <Card className="dark:bg-content1-dark w-full border border-gray-200 bg-content1 dark:border-gray-700">

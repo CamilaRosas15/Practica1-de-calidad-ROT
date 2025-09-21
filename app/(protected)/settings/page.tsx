@@ -26,8 +26,6 @@ export default function SettingsPage() {
 
   const { user } = useUser();
 
-  // console.warn("data", data);
-
   const {
     control,
     handleSubmit,

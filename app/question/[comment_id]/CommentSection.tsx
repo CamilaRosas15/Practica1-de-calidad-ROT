@@ -38,8 +38,6 @@ export function CommentSection({ entity_type, entity_id }: CommentSectionProps) 
 
   const { data: comments, error: commentsError, isLoading: commentsLoading } = useSWRWithAuthKey<CommentsForThisEntityResponse>(API.COMMENT.getAllByThisEntity(entity_id, entity_type), userId);
 
-  // console.error("comments", comments);
-
   const { createComment, isCreating } = useCreateComment(
     {
       entity_type,

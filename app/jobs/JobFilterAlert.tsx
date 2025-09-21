@@ -108,8 +108,6 @@ export function JobFilterAlertContent() {
 
   const isEmptyOrDefaultFilter = checkIfEmptyOrDefaultFilter(countries, experienceLevelNames, jobCategoryNames);
 
-  //   console.warn("isloaded", isLoaded, user?.publicMetadata.isAwareOfDefaultFilter, countries, experienceLevelNames, jobCategoryNames);
-
   // Wait for Clerk to load to prevent flashing issues on UI
   if (!isLoaded) return null;
 

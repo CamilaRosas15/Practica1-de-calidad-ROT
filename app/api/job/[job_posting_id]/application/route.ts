@@ -30,7 +30,6 @@ export async function GET(request: Request, { params }: { params: { job_posting_
 
   const { data, error } = await supabase.from(DBTable.APPLICATION).select(selectString).eq("job_posting_id", params.job_posting_id).returns<JoinedApplication[]>();
 
-  // console.warn("data in route handler applications", data, error);
 
   if (error) {
     if (error.code === ERROR_CODES.INVALID_TEXT_REPRESENTATION) {

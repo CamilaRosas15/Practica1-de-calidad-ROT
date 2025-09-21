@@ -69,9 +69,6 @@ export default function JobDetailsPage() {
 
   const { data: jobDetails, error, isLoading } = useSWR<JobDetails>(API.JOB_POSTING.getById(job_posting_id as string), fetcher);
 
-  // console.log("jobDetails from page", jobDetails);
-
-  // const { data: jobDetails, error, isLoading } = useSWR<JobDetails>(`/api/job/${job_posting_id}`, fetcher);
   const router = useRouter();
   const { isOpen: isReportModalOpen, onOpen: onReportModalOpen, onClose: onReportModalClose } = useDisclosure();
   const { isOpen: isTrackModalOpen, onOpen: onTrackModalOpen, onClose: onTrackModalClose } = useDisclosure();
@@ -84,7 +81,6 @@ export default function JobDetailsPage() {
     isLoading: applicationsIsLoading,
   } = useSWRWithAuthKey<GetAllApplicationsByJobPostingIdResponse>(API.APPLICATION.getAllByJobPostingId(job_posting_id as string), userId);
 
-  // console.warn("applications", applications);
 
   const { createApplication, isCreating } = useCreateApplication(job_posting_id as string, userId);
 
@@ -117,7 +113,6 @@ export default function JobDetailsPage() {
       toast.success("Job tracked successfully");
 
       onTrackModalClose();
-      // console.log("Application created", result);
     } catch (err) {
       if (isRateLimitError(err)) {
         toast.error(ERROR_MESSAGES.TOO_MANY_REQUESTS);
@@ -132,7 +127,6 @@ export default function JobDetailsPage() {
           onClick: () => toast.dismiss(),
         },
       });
-      // console.error("Error creating application:", err);
     }
   };
 
@@ -187,13 +181,6 @@ export default function JobDetailsPage() {
     });
     onTrackModalOpen();
   };
-
-  // const handleApplicationClick = (application: ProcessedApplication) => {
-  //   console.log("Application clicked", application);
-  //   // TODO: go to specific application page, with application id, show all interview experiences of this application
-  //   // TODO: interview experience page, can have a button to add LinkedIn URL, update status button Rejected | Accepted | Ghosted from Applied
-  //   router.push(`/interview/${application.id}`);
-  // };
 
   // Track application view
   const trackViewMyApplicationClick = (applicationId: string) => {
