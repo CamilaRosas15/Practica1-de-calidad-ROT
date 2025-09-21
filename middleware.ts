@@ -101,8 +101,6 @@ export default clerkMiddleware(async (auth, req) => {
     } catch (error) {
       console.warn("Upstash rate limiter failed:", error);
 
-      // await setUpstashFailedStatus();
-
       const isFallbackSuccess = await handleFallbackRateLimiting({ routeType, operation, ip });
 
       if (!isFallbackSuccess) {

@@ -49,14 +49,12 @@ export function JobPostingEditForm({
     },
   });
 
-  // console.warn("experience levels", experienceLevels, "current", jobPosting.job_posting_experience_level);
 
   const { updateJobPosting, isUpdating } = useUpdateJobPostingAdmin(jobPosting.id);
 
   const onSubmit = async (data: UpdateJobPostingAdminFormValues) => {
     try {
       await updateJobPosting(data);
-      // console.warn("data", data);
       toast.success("Job posting updated successfully");
       onClose();
     } catch (error) {

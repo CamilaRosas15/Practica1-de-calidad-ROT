@@ -68,7 +68,6 @@ export default function InterviewExperiencePage() {
   };
 
   const handleSaveForm = async (data: InterviewExperienceFormValues) => {
-    // console.log("save data...", data);
     try {
       await updateApplicationAndInterviewRounds(data);
 

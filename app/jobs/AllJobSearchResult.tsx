@@ -80,7 +80,6 @@ export function AllJobSearchResult() {
     });
   };
 
-  // console.log("jobs", jobs);
 
   // Handle rate limit error
   if (error) {

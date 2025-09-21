@@ -125,5 +125,12 @@ You can help by:
 — like **"Seattle, WA, USA"** — let us know. As long as the job posting clearly mentions **"Seattle, WA, USA"**, we can add it.
 
 Whether you have feedback, want to help, or simply have a question — [contact us directly](https://didtheyghost.me/contact?utm_source=githubrepo&utm_medium=contact)
+
+
+
+
+
+
+
  
 
