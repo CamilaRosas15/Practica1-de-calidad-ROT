@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
   const { userId } = auth();
 
   // Parse search params from the request
-  const { page, search, isVerified, countries, sortOrder, experienceLevelNames, jobCategoryNames } = await loadJobSearchParams(request);
+  const { page, search, isVerified, countries, sortOrder, experienceLevelNames, jobCategoryNames } = loadJobSearchParams(request);
 
   const filteredExperienceLevelNames = filterValidExperienceLevels(experienceLevelNames);
   const filteredJobCategoryNames = filterValidJobCategories(jobCategoryNames);
