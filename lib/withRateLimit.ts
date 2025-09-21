@@ -12,7 +12,7 @@ type EndpointName = "CreateJob" | "CreateCompany" | "CreateComment" | "TrackAppl
 export async function withRateLimit<T>(action: (user_id: string) => Promise<T>, endpointName: EndpointName): Promise<T> {
   const { userId: user_id } = auth();
 
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
   const ip = cookieStore.get("x-real-ip")?.value ?? "127.0.0.1";
 
   if (!user_id) {

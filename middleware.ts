@@ -33,7 +33,7 @@ async function handleFallbackRateLimiting(params: { routeType: RateLimitRouteTyp
 const IS_UPSTASH_FAILED = process.env.NEXT_PUBLIC_IS_UPSTASH_FAILED === "true";
 
 export default clerkMiddleware(async (auth, req) => {
-  const session = await auth();
+  const session = auth();
 
   const userId = session?.userId;
 

@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 
 export async function setCookieAction(name: string, value: string) {
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
 
   cookieStore.set(name, value);
 }

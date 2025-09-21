@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 
 export async function getCookieAction(name: string) {
-  const cookieStore = await cookies();
+  const cookieStore = cookies();
 
   return cookieStore.get(name)?.value;
 }
