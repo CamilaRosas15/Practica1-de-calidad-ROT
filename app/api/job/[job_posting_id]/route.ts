@@ -44,7 +44,6 @@ export async function GET(request: Request, { params }: { params: { job_posting_
     .eq("id", params.job_posting_id)
     .maybeSingle();
 
-  // console.error("data in route handler of this joaab", data, error);
 
   if (error) {
     if (error.code === ERROR_CODES.INVALID_TEXT_REPRESENTATION) {
@@ -57,8 +56,6 @@ export async function GET(request: Request, { params }: { params: { job_posting_
   if (!data) {
     return NextResponse.json({ error: "Job not found" }, { status: 404 });
   }
-
-  // console.warn("data in route handler of this job", data);
 
   return NextResponse.json(data);
 }

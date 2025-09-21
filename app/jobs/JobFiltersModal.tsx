@@ -56,8 +56,6 @@ export function JobFiltersModal({
   const [tempCountries, setTempCountries] = useState(initialCountries);
   const [tempExperienceLevelNames, setTempExperienceLevelNames] = useState(initialExperienceLevelNames);
 
-  // console.warn("tempExperienceLevelNames", tempExperienceLevelNames, initialExperienceLevelNames);
-
   const [tempJobCategoryNames, setTempJobCategoryNames] = useState(initialJobCategoryNames);
 
   const handleClose = () => {

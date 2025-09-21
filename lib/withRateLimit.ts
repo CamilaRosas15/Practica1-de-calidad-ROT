@@ -50,7 +50,6 @@ export async function withRateLimit<T>(action: (user_id: string) => Promise<T>, 
   } catch (error) {
     // If Upstash fails, use memory cache fallback
     if (isUpstashDailyLimitError(error)) {
-      // console.error("error name", error.name);
       const [burstFallback, sustainedFallback] = await createFallbackRateLimiters({ routeType, operation: "WRITE", ip });
 
       if (!burstFallback.success || !sustainedFallback.success) {

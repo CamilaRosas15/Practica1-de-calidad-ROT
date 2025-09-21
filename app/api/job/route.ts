@@ -41,10 +41,6 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  // console.warn("countries=", countries);
-  // console.warn("experienceLevelNames=", experienceLevelNames);
-  // console.warn("jobCategoryNames=", jobCategoryNames);
-
   const supabase = await createClerkSupabaseClientSsr();
 
   const { data, error } = await supabase.rpc(DB_RPC.GET_ALL_SEARCH_JOBS, {
