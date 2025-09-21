@@ -14,6 +14,16 @@ import { CustomChip } from "@/components/CustomChip";
 
 type ColumnKey = keyof Pick<AdminReportResponse, "entity_type" | "report_type" | "report_message" | "report_status" | "created_at" | "resolution_notes" | "reporter" | "handler">;
 
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "Pending":
+      return "warning";
+    case "Resolved":
+      return "success";
+    default:
+      return "danger"; 
+  }
+};
 export function AdminReportTable() {
   const { data: reports, error, isLoading } = useSWR<AdminReportResponse[]>(API.ADMIN.getAllReports, fetcher);
 
@@ -32,7 +42,9 @@ export function AdminReportTable() {
           />
         );
       case "report_status":
-        return <CustomChip color={report.report_status === "Pending" ? "warning" : report.report_status === "Resolved" ? "success" : "danger"}>{report.report_status}</CustomChip>;
+        return <CustomChip color={getStatusColor(report.report_status)}>
+                {report.report_status}
+                </CustomChip>;
       case "created_at":
         return formatDateDayMonthYear(report.created_at);
       case "handler":

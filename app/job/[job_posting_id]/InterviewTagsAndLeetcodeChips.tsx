@@ -8,6 +8,12 @@ type InterviewTagsAndLeetcodeProps = {
   leetcode_questions: LeetcodeQuestionInput[] | null;
 };
 
+const difficultyColorMap = {
+  [LEETCODE_DIFFICULTY.Easy]: "success",
+  [LEETCODE_DIFFICULTY.Medium]: "warning",
+  [LEETCODE_DIFFICULTY.Hard]: "danger",
+} as const;
+
 export function InterviewTagsAndLeetcodeChips({ interview_tags, leetcode_questions }: InterviewTagsAndLeetcodeProps) {
   if ((!interview_tags || interview_tags.length === 0) && (!leetcode_questions || leetcode_questions.length === 0)) {
     return null;
@@ -30,7 +36,7 @@ export function InterviewTagsAndLeetcodeChips({ interview_tags, leetcode_questio
         utilSortLeetcodeQuestionsDifficulty(leetcode_questions).map((question, index) => (
           <CustomChip
             key={index}
-            color={question.difficulty === LEETCODE_DIFFICULTY.Easy ? "success" : question.difficulty === LEETCODE_DIFFICULTY.Medium ? "warning" : "danger"}
+            color={difficultyColorMap[question.difficulty] || "default"}
             size="sm"
             variant="flat"
           >

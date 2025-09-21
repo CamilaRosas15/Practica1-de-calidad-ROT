@@ -16,6 +16,17 @@ export type CreateJobArgs = Pick<JobPostingTable, "company_id"> & {
   company_name: string;
 };
 
+// --- FUNCION AUXILIAR PARA PROCESAR ERRORES ---
+
+const getFriendlyErrorMessage = (err: unknown): string => {
+  if (err instanceof z.ZodError) {
+    return err.errors.map((issue) => issue.message).join(", ");
+  }
+  if (err instanceof Error) {
+    return err.message;
+  }
+  return "Unknown error occurred";
+};
 const actionCreateJob = async (key: string, { arg }: { arg: CreateJobArgs }): Promise<ServerActionResult> => {
   try {
     return await withRateLimit(async (user_id) => {
@@ -75,7 +86,7 @@ const actionCreateJob = async (key: string, { arg }: { arg: CreateJobArgs }): Pr
         // Determine error message
         console.error("Create Job error:", err);
 
-        const errorMessage = err instanceof z.ZodError ? err.errors.map((issue) => issue.message).join(", ") : err instanceof Error ? err.message : "Unknown error occurred";
+        const errorMessage = getFriendlyErrorMessage(err);
 
         // Track all errors that reach this catch block
         await mpServerTrack("Job Added Error", {

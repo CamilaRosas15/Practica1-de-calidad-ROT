@@ -11,6 +11,19 @@ import { extractDomain } from "@/lib/extractDomain";
 import { mpServerTrack } from "@/lib/mixpanelServer";
 import { ServerActionResult } from "@/lib/sharedTypes";
 
+
+// --- FUNCION AUXILIAR PARA PROCESAR ERRORES ---
+
+const getFriendlyErrorMessage = (err: unknown): string => {
+  if (err instanceof z.ZodError) {
+    return err.errors.map((issue) => issue.message).join(", ");
+  } else if (err instanceof Error) {
+    return err.message;
+  } else {
+    return "Unknown error occurred";
+  }
+};
+
 // TODO Aug: use safeParse instead of parse. refactor rate limit, remove try catch outer
 
 const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: CompanyFormData }): Promise<ServerActionResult> => {
@@ -63,7 +76,7 @@ const actionCreateCompany = async (key: string, { arg: newCompany }: { arg: Comp
         // Add general error tracking for non-duplicate errors
         console.error("Create Company error:", err);
 
-        const errorMessage = err instanceof z.ZodError ? err.errors.map((issue) => issue.message).join(", ") : err instanceof Error ? err.message : "Unknown error occurred";
+        const errorMessage = getFriendlyErrorMessage(err);
 
         await mpServerTrack("Company Added Error", {
           company_name: newCompany.company_name,
