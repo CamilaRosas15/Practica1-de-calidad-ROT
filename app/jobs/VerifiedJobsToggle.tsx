@@ -27,7 +27,7 @@ export function VerifiedJobsToggle({ isVerified, onVerifiedChange }: VerifiedJob
         <Tooltip content="Only show jobs that have a verified valid link" isDisabled={!isTooltipOpen} isOpen={isTooltipOpen} placement="top" onOpenChange={(open) => setIsTooltipOpen(open)}>
           <CustomButton className="h-auto min-w-0 !gap-1 p-0 text-sm text-default-500" radius="full" size="sm" variant="light" onPress={handleTooltipToggle}>
             <span className="text-default-400">?</span>
-            Verified
+            <span>Verified</span>
           </CustomButton>
         </Tooltip>
         <Switch color="success" isSelected={isVerified} size="sm" onValueChange={onVerifiedChange} />
