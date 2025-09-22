@@ -54,10 +54,10 @@ export function JobPostingCard({
   experienceLevels,
   jobCategories,
 }: {
-  jobPosting: AllJobPostingWithCompany;
-  countries: CountryTable[];
-  experienceLevels: ExperienceLevelSelect[];
-  jobCategories: JobCategorySelect[];
+  readonly jobPosting: AllJobPostingWithCompany;
+  readonly countries: CountryTable[];
+  readonly experienceLevels: ExperienceLevelSelect[];
+  readonly jobCategories: JobCategorySelect[];
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isViewingHistory, setIsViewingHistory] = useState(false);

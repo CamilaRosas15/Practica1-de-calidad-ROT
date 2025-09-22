@@ -11,10 +11,10 @@ import { isRateLimitError } from "@/lib/errorHandling";
 import { CustomButton } from "@/components/CustomButton";
 
 type SuggestLinkModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  jobId: string;
-  jobStatus: JobStatus;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
+  readonly jobId: string;
+  readonly jobStatus: JobStatus;
 };
 
 export function SuggestLinkModal({ isOpen, onClose, jobId, jobStatus }: SuggestLinkModalProps) {

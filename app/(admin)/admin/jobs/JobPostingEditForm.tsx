@@ -24,11 +24,11 @@ export function JobPostingEditForm({
   jobCategories,
   onClose,
 }: {
-  jobPosting: AllJobPostingWithCompany;
-  countries: CountryTable[];
-  experienceLevels: ExperienceLevelSelect[];
-  jobCategories: JobCategorySelect[];
-  onClose: () => void;
+  readonly jobPosting: AllJobPostingWithCompany;
+  readonly countries: CountryTable[];
+  readonly experienceLevels: ExperienceLevelSelect[];
+  readonly jobCategories: JobCategorySelect[];
+  readonly onClose: () => void;
 }) {
   const {
     control,

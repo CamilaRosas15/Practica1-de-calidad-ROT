@@ -18,9 +18,9 @@ import { CustomButton } from "@/components/CustomButton";
 import { EmptyContent } from "@/components/EmptyContent";
 
 type EditInterviewDetailsProps = {
-  applicationDetails: GetApplicationByIdResponse;
-  interviewRounds: InterviewExperienceCardData[];
-  onSave: (data: InterviewExperienceFormValues) => Promise<void>;
+  readonly applicationDetails: GetApplicationByIdResponse;
+  readonly interviewRounds: InterviewExperienceCardData[];
+  readonly onSave: (data: InterviewExperienceFormValues) => Promise<void>;
 };
 
 export function EditInterviewDetails({ applicationDetails, interviewRounds, onSave }: EditInterviewDetailsProps) {

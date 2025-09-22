@@ -8,8 +8,8 @@ import { CalendarIcon } from "@/components/icons";
 import { GetOnlineAssessmentsByJobPostingIdResponse } from "@/app/api/job/[job_posting_id]/interview/online/route";
 
 type OnlineAssessmentCardProps = {
-  application: GetOnlineAssessmentsByJobPostingIdResponse;
-  onCardClick: () => void;
+  readonly application: GetOnlineAssessmentsByJobPostingIdResponse;
+  readonly onCardClick: () => void;
 };
 
 export function OnlineAssessmentCard({ application, onCardClick }: OnlineAssessmentCardProps) {

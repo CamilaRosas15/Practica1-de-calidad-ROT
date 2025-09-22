@@ -7,7 +7,7 @@ import { CalendarIcon } from "@/components/icons";
 import { InterviewExperienceCardData } from "@/lib/sharedTypes";
 
 type InterviewExperienceCardProps = {
-  interviewExperience: InterviewExperienceCardData;
+  readonly interviewExperience: InterviewExperienceCardData;
 };
 
 export function InterviewExperienceCard({ interviewExperience }: InterviewExperienceCardProps) {

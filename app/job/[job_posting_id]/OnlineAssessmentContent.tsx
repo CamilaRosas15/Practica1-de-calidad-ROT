@@ -37,7 +37,7 @@ export function sortApplicationsByDateTime<T extends { created_at: string }>(app
 }
 
 type OnlineAssessmentContentProps = {
-  job_posting_id: string;
+  readonly job_posting_id: string;
 };
 
 export function OnlineAssessmentContent({ job_posting_id }: OnlineAssessmentContentProps) {

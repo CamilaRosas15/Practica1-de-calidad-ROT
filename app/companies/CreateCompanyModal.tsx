@@ -10,9 +10,9 @@ import { CompanyFormData, companySchema } from "@/lib/schema/addCompanySchema";
 import { CustomButton } from "@/components/CustomButton";
 
 type CreateCompanyModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmitSuccess: () => void;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
+  readonly onSubmitSuccess: () => void;
 };
 
 export function CreateCompanyModal({ isOpen, onClose, onSubmitSuccess }: CreateCompanyModalProps) {

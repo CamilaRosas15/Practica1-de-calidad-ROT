@@ -19,7 +19,7 @@ import { DataNotFoundMessage } from "@/components/DataNotFoundMessage";
 import { CustomButton } from "@/components/CustomButton";
 
 type InterviewExperienceContentProps = {
-  job_posting_id: string;
+  readonly job_posting_id: string;
 };
 
 export function InterviewExperienceContent({ job_posting_id }: InterviewExperienceContentProps) {

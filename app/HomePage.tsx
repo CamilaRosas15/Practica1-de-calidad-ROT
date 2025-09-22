@@ -218,7 +218,7 @@ const FAQS: readonly Faq[] = [
   },
 ];
 
-function LoomFeature({ feature, isMobile }: { feature: LoomFeature; isMobile: boolean }) {
+function LoomFeature({ feature, isMobile }: {readonly feature: LoomFeature; readonly isMobile: boolean }) {
   const [iframeLoaded, setIframeLoaded] = useState(false);
 
   return (
@@ -239,7 +239,7 @@ function LoomFeature({ feature, isMobile }: { feature: LoomFeature; isMobile: bo
   );
 }
 
-function ScreenshotFeature({ feature, isMobile, theme }: { feature: ScreenshotFeature; isMobile: boolean; theme: string | undefined }) {
+function ScreenshotFeature({ feature, isMobile, theme }: {readonly feature: ScreenshotFeature; readonly isMobile: boolean; readonly theme: string | undefined }) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleImageLoad = () => {

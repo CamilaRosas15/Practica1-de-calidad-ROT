@@ -4,8 +4,8 @@ import { utilSortInterviewTags } from "@/app/interview/[application_id]/Intervie
 import { CustomChip } from "@/components/CustomChip";
 
 type InterviewTagsAndLeetcodeProps = {
-  interview_tags: InterviewTag[] | null;
-  leetcode_questions: LeetcodeQuestionInput[] | null;
+  readonly interview_tags: InterviewTag[] | null;
+  readonly leetcode_questions: LeetcodeQuestionInput[] | null;
 };
 
 const difficultyColorMap = {
