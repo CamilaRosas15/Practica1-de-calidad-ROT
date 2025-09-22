@@ -11,7 +11,7 @@ type UpdateJobPostingAdminArgs = {
 };
 
 const actionUpdateJobPostingAdmin = async (key: string, { arg }: { arg: UpdateJobPostingAdminArgs }) => {
-  if (!checkRole("admin")) {
+  if (!(await checkRole("admin"))) {
     throw new Error("Unauthorized");
   }
 

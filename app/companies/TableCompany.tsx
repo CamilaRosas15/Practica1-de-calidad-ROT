@@ -57,7 +57,14 @@ export function TableCompanyContent() {
       const first = a[sortOption.column];
       const second = b[sortOption.column];
 
-      const cmp = first.toLowerCase() < second.toLowerCase() ? -1 : first.toLowerCase() > second.toLowerCase() ? 1 : 0;
+      let cmp;
+      if (first < second) {
+        cmp = -1;
+      } else if (first > second) {
+        cmp = 1;
+      } else {
+        cmp = 0;
+      }
 
       return sortOption.direction === "descending" ? -cmp : cmp;
     });

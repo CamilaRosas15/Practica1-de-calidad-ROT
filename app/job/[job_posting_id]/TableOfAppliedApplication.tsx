@@ -134,7 +134,7 @@ export function TableOfAppliedApplication({ applications }: TableOfAppliedApplic
       if (first == null) return direction === "descending" ? 1 : -1;
       if (second == null) return direction === "descending" ? -1 : 1;
 
-      const cmp = first < second ? -1 : first > second ? 1 : 0;
+      const cmp = String(first).localeCompare(String(second));
 
       return direction === "descending" ? -cmp : cmp;
     });
