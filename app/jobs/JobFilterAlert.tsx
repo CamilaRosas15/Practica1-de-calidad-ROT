@@ -172,7 +172,9 @@ export function JobFilterAlertContent() {
         }}
         secondaryButton={{
           label: "Don't show again",
-          onClick: handleDismiss,
+          onClick: () =>{
+            void handleDismiss();
+          },
         }}
       />
     );
