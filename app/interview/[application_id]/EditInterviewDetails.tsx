@@ -60,7 +60,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
     if (currentInterviewRounds.length === 0) return true;
     const lastRound = currentInterviewRounds[currentInterviewRounds.length - 1];
 
-    return lastRound && lastRound.response_date !== null;
+    return lastRound?.response_date !== null;
   };
 
   const handleAddNewInterviewRoundClick = async () => {
@@ -375,8 +375,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
                           </CustomButton>
                         </div>
 
-                        {field.value &&
-                          field.value.map((question, qIndex) => {
+                        {field.value?.map((question, qIndex) => {
                             const questionFieldError = getQuestionFieldError(index, qIndex);
 
                             const isQuestionFieldTouched = checkQuestionFieldTouched(index, qIndex);
