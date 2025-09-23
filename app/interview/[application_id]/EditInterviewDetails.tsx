@@ -32,7 +32,14 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
       applied_date: applicationDetails.applied_date,
       first_response_date: applicationDetails.first_response_date ?? null,
       status: applicationDetails.status,
-      interviewRounds: interviewRounds,
+      interviewRounds: interviewRounds.map(round => ({
+    ...round,
+    leetcode_questions: round.leetcode_questions?.map(q => ({
+      ...q,
+      id: q.id || crypto.randomUUID(), // <--- CAMBIO: Asigna un ID si no existe
+    })) || []
+  })),
+
     },
     mode: "onChange",
   });
@@ -358,6 +365,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
                               field.onChange([
                                 ...(field.value || []),
                                 {
+                                  id: crypto.randomUUID(),
                                   question_number: DEFAULT_QUESTION_NUMBER,
                                 },
                               ]);
@@ -380,7 +388,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
                             const shouldShowError = question.question_number !== DEFAULT_QUESTION_NUMBER || isQuestionFieldTouched || methods.formState.isSubmitted;
 
                             return (
-                              <div key={qIndex} className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-center">
+                              <div key={question.id} className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-center">
                                 <Input
                                   isRequired
                                   className="flex-1"
