@@ -6,8 +6,7 @@ import mixpanel from "mixpanel-browser";
 
 import { useCreateReportAdmin } from "@/lib/hooks/useCreateReportAdmin";
 import { REPORT_LINK_TYPES, reportLinkSchema, type ReportLinkFormValues } from "@/lib/schema/reportLinkSchema";
-import { isRateLimitError } from "@/lib/errorHandling";
-import { ERROR_MESSAGES } from "@/lib/errorHandling";
+import { isRateLimitError, ERROR_MESSAGES } from "@/lib/errorHandling";
 import { CustomButton } from "@/components/CustomButton";
 
 type ReportLinkModalProps = {
