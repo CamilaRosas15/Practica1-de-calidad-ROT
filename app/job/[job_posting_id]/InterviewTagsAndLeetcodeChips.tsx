@@ -1,5 +1,4 @@
-import { LeetcodeQuestionInput } from "@/lib/sharedTypes";
-import { LEETCODE_DIFFICULTY, utilSortLeetcodeQuestionsDifficulty } from "@/lib/sharedTypes";
+import { LEETCODE_DIFFICULTY, utilSortLeetcodeQuestionsDifficulty, LeetcodeQuestionInput } from "@/lib/sharedTypes";
 import { utilSortInterviewTags } from "@/app/interview/[application_id]/InterviewTagsModal";
 import { CustomChip } from "@/components/CustomChip";
 
