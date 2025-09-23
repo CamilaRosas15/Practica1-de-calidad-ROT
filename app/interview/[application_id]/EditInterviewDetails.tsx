@@ -71,21 +71,19 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
 
     if (!isFormValid) {
       toast.error("Please fix the errors in the form before adding a new one.");
-    } else {
-      if (isNewRoundAllowed) {
-        append({
-          description: "",
-          interview_date: today(getLocalTimeZone()).toString(),
-          response_date: null,
-          interview_tags: [],
-          leetcode_questions: [],
-        });
+    } else if (isNewRoundAllowed) {
+      append({
+        description: "",
+        interview_date: today(getLocalTimeZone()).toString(),
+        response_date: null,
+        interview_tags: [],
+        leetcode_questions: [],
+      });
       } else {
         const latestRoundNumber = fields.length;
 
         toast.error(`Please fill the response date for the latest interview Round ${latestRoundNumber} before adding a new round.`);
       }
-    }
   };
 
   const handleFormSubmit = methods.handleSubmit(onSave, () => {
