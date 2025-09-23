@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 
 import { createClerkSupabaseClientSsr } from "@/lib/supabase";
 import { DBTable } from "@/lib/constants/dbTables";
-import { buildSelectString } from "@/lib/buildSelectString";
-import { SelectObject } from "@/lib/buildSelectString";
+import { buildSelectString, SelectObject } from "@/lib/buildSelectString";
 import { ERROR_CODES, ERROR_MESSAGES } from "@/lib/errorHandling";
 
 // TODO 5 nov: select only required fields, get positions statistics in future / remove the statisics for now?
