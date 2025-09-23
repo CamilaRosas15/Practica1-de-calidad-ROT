@@ -35,7 +35,8 @@ export function InterviewTagsAndLeetcodeChips({ interview_tags, leetcode_questio
         leetcode_questions.length > 0 &&
         utilSortLeetcodeQuestionsDifficulty(leetcode_questions).map((question, index) => (
           <CustomChip
-            key={index}
+            //key={index}
+            key={question.id || `${question.question_number}-${index}`} 
             color={difficultyColorMap[question.difficulty] || "default"}
             size="sm"
             variant="flat"
