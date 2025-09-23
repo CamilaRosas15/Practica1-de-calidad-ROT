@@ -18,9 +18,9 @@ import { CustomButton } from "@/components/CustomButton";
 import { EmptyContent } from "@/components/EmptyContent";
 
 type EditInterviewDetailsProps = {
-  applicationDetails: GetApplicationByIdResponse;
-  interviewRounds: InterviewExperienceCardData[];
-  onSave: (data: InterviewExperienceFormValues) => Promise<void>;
+  readonly applicationDetails: GetApplicationByIdResponse;
+  readonly interviewRounds: InterviewExperienceCardData[];
+  readonly onSave: (data: InterviewExperienceFormValues) => Promise<void>;
 };
 
 export function EditInterviewDetails({ applicationDetails, interviewRounds, onSave }: EditInterviewDetailsProps) {
@@ -32,7 +32,14 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
       applied_date: applicationDetails.applied_date,
       first_response_date: applicationDetails.first_response_date ?? null,
       status: applicationDetails.status,
-      interviewRounds: interviewRounds,
+      interviewRounds: interviewRounds.map(round => ({
+    ...round,
+    leetcode_questions: round.leetcode_questions?.map(q => ({
+      ...q,
+      id: q.id || crypto.randomUUID(), // <--- CAMBIO: Asigna un ID si no existe
+    })) || []
+  })),
+
     },
     mode: "onChange",
   });
@@ -53,7 +60,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
     if (currentInterviewRounds.length === 0) return true;
     const lastRound = currentInterviewRounds[currentInterviewRounds.length - 1];
 
-    return lastRound && lastRound.response_date !== null;
+    return lastRound?.response_date !== null;
   };
 
   const handleAddNewInterviewRoundClick = async () => {
@@ -71,21 +78,19 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
 
     if (!isFormValid) {
       toast.error("Please fix the errors in the form before adding a new one.");
-    } else {
-      if (isNewRoundAllowed) {
-        append({
-          description: "",
-          interview_date: today(getLocalTimeZone()).toString(),
-          response_date: null,
-          interview_tags: [],
-          leetcode_questions: [],
-        });
+    } else if (isNewRoundAllowed) {
+      append({
+        description: "",
+        interview_date: today(getLocalTimeZone()).toString(),
+        response_date: null,
+        interview_tags: [],
+        leetcode_questions: [],
+      });
       } else {
         const latestRoundNumber = fields.length;
 
         toast.error(`Please fill the response date for the latest interview Round ${latestRoundNumber} before adding a new round.`);
       }
-    }
   };
 
   const handleFormSubmit = methods.handleSubmit(onSave, () => {
@@ -360,6 +365,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
                               field.onChange([
                                 ...(field.value || []),
                                 {
+                                  id: crypto.randomUUID(),
                                   question_number: DEFAULT_QUESTION_NUMBER,
                                 },
                               ]);
@@ -369,8 +375,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
                           </CustomButton>
                         </div>
 
-                        {field.value &&
-                          field.value.map((question, qIndex) => {
+                        {field.value?.map((question, qIndex) => {
                             const questionFieldError = getQuestionFieldError(index, qIndex);
 
                             const isQuestionFieldTouched = checkQuestionFieldTouched(index, qIndex);
@@ -382,7 +387,7 @@ export function EditInterviewDetails({ applicationDetails, interviewRounds, onSa
                             const shouldShowError = question.question_number !== DEFAULT_QUESTION_NUMBER || isQuestionFieldTouched || methods.formState.isSubmitted;
 
                             return (
-                              <div key={qIndex} className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-center">
+                              <div key={question.id} className="mt-2 flex flex-col gap-4 sm:flex-row sm:items-center">
                                 <Input
                                   isRequired
                                   className="flex-1"

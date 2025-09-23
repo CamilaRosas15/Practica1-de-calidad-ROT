@@ -23,7 +23,7 @@ import { CustomButton } from "@/components/CustomButton";
 import { useSWRWithAuthKey } from "@/lib/hooks/useSWRWithAuthKey";
 
 type QuestionContentProps = {
-  job_posting_id: string;
+  readonly job_posting_id: string;
 };
 
 export function QuestionContent({ job_posting_id }: QuestionContentProps) {

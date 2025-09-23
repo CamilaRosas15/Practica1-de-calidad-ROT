@@ -11,8 +11,8 @@ import { CustomChip } from "@/components/CustomChip";
 import { EmptyContent } from "@/components/EmptyContent";
 
 type ViewInterviewDetailsProps = {
-  applicationDetails: GetApplicationByIdResponse;
-  interviewRounds: InterviewExperienceCardData[];
+  readonly applicationDetails: GetApplicationByIdResponse;
+  readonly interviewRounds: InterviewExperienceCardData[];
 };
 
 export function ViewInterviewDetails({ applicationDetails, interviewRounds }: ViewInterviewDetailsProps) {

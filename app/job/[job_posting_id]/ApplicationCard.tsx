@@ -24,8 +24,8 @@ export function getStatusColor(status: ApplicationStatus): "primary" | "danger" 
 }
 
 type ApplicationCardProps = {
-  application: JobPostPageInterviewData;
-  onCardClick: () => void;
+  readonly application: JobPostPageInterviewData;
+  readonly onCardClick: () => void;
 };
 
 export function ApplicationCard({ application, onCardClick }: ApplicationCardProps) {

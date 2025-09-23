@@ -23,7 +23,7 @@ function formatValue(value: any): string {
   return String(value);
 }
 
-export function JobPostingHistory({ jobPostingId }: { jobPostingId: string }) {
+export function JobPostingHistory({ jobPostingId }: { readonly jobPostingId: string }) {
   const { data: changelog, isLoading } = useSWR<JobPostingChangelogTable[]>(API.ADMIN.getJobChangelog(jobPostingId), fetcher);
 
   if (isLoading) return <div>Loading...</div>;

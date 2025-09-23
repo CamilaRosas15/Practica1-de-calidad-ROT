@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-
+import { buildSelectString, SelectObject } from "@/lib/buildSelectString";
 import { createClerkSupabaseClientSsr } from "@/lib/supabase";
 import { DBTable } from "@/lib/constants/dbTables";
-import { buildSelectString } from "@/lib/buildSelectString";
-import { SelectObject } from "@/lib/buildSelectString";
 import { ERROR_CODES, ERROR_MESSAGES } from "@/lib/errorHandling";
 
 // Select all the jobs from job_posting table for a company on the specific company page

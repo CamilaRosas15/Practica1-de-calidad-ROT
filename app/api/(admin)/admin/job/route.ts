@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 
 import { createClerkSupabaseClientSsr } from "@/lib/supabase";
 import { DBTable } from "@/lib/constants/dbTables";
-import { SelectObject } from "@/lib/buildSelectString";
-import { buildSelectString } from "@/lib/buildSelectString";
+import { SelectObject,buildSelectString } from "@/lib/buildSelectString";
 
 type AllJobPostingWithCompanySelect = JobPostingTable & {
   [DBTable.COMPANY]: Pick<CompanyTable, "id" | "company_name" | "logo_url">;

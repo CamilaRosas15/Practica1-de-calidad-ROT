@@ -12,6 +12,7 @@ const MAX_LEETCODE_QUESTION_NUMBER = parseInt(process.env.NEXT_PUBLIC_MAX_LEETCO
 
 // Add new LeetCode question schema
 const leetCodeQuestionSchema = z.object({
+  id: z.string().optional(),
   question_number: z
     .number()
     .int("Question number must be a whole number")

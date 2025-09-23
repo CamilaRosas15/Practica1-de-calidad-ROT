@@ -92,12 +92,9 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
           const newDeviceId = mixpanel.get_property("$device_id");
 
           await setCookieAction(MIXPANEL_COOKIE_NAME, newDeviceId);
-        } else {
-          // Anonymous user: ALWAYS sync cookie with Mixpanel's device ID
-          if (existingCookieDeviceId !== deviceId) {
+        } else if (existingCookieDeviceId !== deviceId){
             await setCookieAction(MIXPANEL_COOKIE_NAME, deviceId);
           }
-        }
       }
     };
 

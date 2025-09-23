@@ -18,10 +18,10 @@ const INTERVIEW_TAG_MAP: Record<InterviewTag, string> = {
 };
 
 type InterviewTagsModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  selectedTags: InterviewTag[];
-  onTagsChange: (tags: InterviewTag[]) => void;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
+  readonly selectedTags: InterviewTag[];
+  readonly onTagsChange: (tags: InterviewTag[]) => void;
 };
 
 export function InterviewTagsModal({ isOpen, onClose, selectedTags, onTagsChange }: InterviewTagsModalProps) {

@@ -218,7 +218,7 @@ const FAQS: readonly Faq[] = [
   },
 ];
 
-function LoomFeature({ feature, isMobile }: { feature: LoomFeature; isMobile: boolean }) {
+function LoomFeature({ feature, isMobile }: {readonly feature: LoomFeature; readonly isMobile: boolean }) {
   const [iframeLoaded, setIframeLoaded] = useState(false);
 
   return (
@@ -239,7 +239,7 @@ function LoomFeature({ feature, isMobile }: { feature: LoomFeature; isMobile: bo
   );
 }
 
-function ScreenshotFeature({ feature, isMobile, theme }: { feature: ScreenshotFeature; isMobile: boolean; theme: string | undefined }) {
+function ScreenshotFeature({ feature, isMobile, theme }: {readonly feature: ScreenshotFeature; readonly isMobile: boolean; readonly theme: string | undefined }) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleImageLoad = () => {
@@ -384,7 +384,7 @@ export function HomePage() {
                     <p className="mb-6 text-default-600">{feature.description}</p>
                     <ul className="space-y-3">
                       {feature.details.map((detail, i) => (
-                        <motion.li key={i} animate={{ opacity: 1, x: 0 }} className="flex items-start gap-2" initial={{ opacity: 0, x: -20 }} transition={{ delay: i * 0.1 }}>
+                        <motion.li key={detail} animate={{ opacity: 1, x: 0 }} className="flex items-start gap-2" initial={{ opacity: 0, x: -20 }} transition={{ delay: i * 0.1 }}>
                           <span className="text-primary">•</span>
                           {detail}
                         </motion.li>
@@ -408,7 +408,7 @@ export function HomePage() {
           <Accordion selectedKeys={selectedKeys} selectionMode="multiple" variant="bordered" onSelectionChange={(keys) => setSelectedKeys(keys as Set<string>)}>
             {FAQS.map((faq, index) => (
               <AccordionItem
-                key={index}
+                key={faq.question}
                 aria-label={faq.question}
                 title={faq.question}
                 classNames={{
