@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider, ThemeProviderProps } from "next-themes";
 
 export interface HeroUIProvidersProps {
-  children: React.ReactNode;
-  themeProps?: ThemeProviderProps;
+  readonly children: React.ReactNode;
+  readonly themeProps?: ThemeProviderProps;
 }
 
 export function HeroUIProviders({ children, themeProps }: HeroUIProvidersProps) {

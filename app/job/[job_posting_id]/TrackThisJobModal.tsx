@@ -6,10 +6,10 @@ import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
 import { CustomButton } from "@/components/CustomButton";
 
 type TrackThisJobModalProps = {
-  isOpen: boolean;
-  isLoading: boolean;
-  onClose: () => void;
-  onSubmit: (appliedDate: string) => void;
+  readonly isOpen: boolean;
+  readonly isLoading: boolean;
+  readonly onClose: () => void;
+  readonly onSubmit: (appliedDate: string) => void;
 };
 
 export function TrackThisJobModal({ isOpen, isLoading, onClose, onSubmit }: TrackThisJobModalProps) {

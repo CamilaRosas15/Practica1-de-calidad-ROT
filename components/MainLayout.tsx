@@ -21,7 +21,7 @@ const HIDE_LOGO_CREDIT_PATHS = [
   // Add any paths where you don't want the logo credit
 ];
 
-export function MainLayout({ children }: { children: React.ReactNode }) {
+export function MainLayout({ children }: { readonly children: React.ReactNode }) {
   const pathname = usePathname();
 
   const shouldShowLogoCredit = !(

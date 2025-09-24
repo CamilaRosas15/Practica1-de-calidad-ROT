@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { IconSvgProps } from "@/types";
 
-export const Logo: React.FC<IconSvgProps> = ({ size = 36, width, height, ...props }) => (
+export const Logo: React.FC<Readonly<IconSvgProps>> = ({ size = 36, width, height, ...props }) => (
   <svg fill="none" height={size || height} viewBox="0 0 32 32" width={size || width} {...props}>
     <path
       clipRule="evenodd"
@@ -14,7 +14,7 @@ export const Logo: React.FC<IconSvgProps> = ({ size = 36, width, height, ...prop
   </svg>
 );
 
-export const GithubIcon: React.FC<IconSvgProps> = ({ size = 24, width, height, ...props }) => {
+export const GithubIcon: React.FC<Readonly<IconSvgProps>> = ({ size = 24, width, height, ...props }) => {
   return (
     <svg height={size || height} viewBox="0 0 24 24" width={size || width} {...props}>
       <path
@@ -27,7 +27,7 @@ export const GithubIcon: React.FC<IconSvgProps> = ({ size = 24, width, height, .
   );
 };
 
-export const MoonFilledIcon = ({ size = 24, width, height, ...props }: IconSvgProps) => (
+export const MoonFilledIcon = ({ size = 24, width, height, ...props }: Readonly<IconSvgProps>) => (
   <svg aria-hidden="true" focusable="false" height={size || height} viewBox="0 0 24 24" width={size || width} {...props}>
     <path
       d="M21.53 15.93c-.16-.27-.61-.69-1.73-.49a8.46 8.46 0 01-1.88.13 8.409 8.409 0 01-5.91-2.82 8.068 8.068 0 01-1.44-8.66c.44-1.01.13-1.54-.09-1.76s-.77-.55-1.83-.11a10.318 10.318 0 00-6.32 10.21 10.475 10.475 0 007.04 8.99 10 10 0 002.89.55c.16.01.32.02.48.02a10.5 10.5 0 008.47-4.27c.67-.93.49-1.519.32-1.79z"
@@ -36,7 +36,7 @@ export const MoonFilledIcon = ({ size = 24, width, height, ...props }: IconSvgPr
   </svg>
 );
 
-export const SunFilledIcon = ({ size = 24, width, height, ...props }: IconSvgProps) => (
+export const SunFilledIcon = ({ size = 24, width, height, ...props }: Readonly<IconSvgProps>) => (
   <svg aria-hidden="true" focusable="false" height={size || height}  viewBox="0 0 24 24" width={size || width} {...props}>
     <g fill="currentColor">
       <path d="M19 12a7 7 0 11-7-7 7 7 0 017 7z" />
@@ -45,7 +45,7 @@ export const SunFilledIcon = ({ size = 24, width, height, ...props }: IconSvgPro
   </svg>
 );
 
-export const HeartFilledIcon = ({ size = 24, width, height, ...props }: IconSvgProps) => (
+export const HeartFilledIcon = ({ size = 24, width, height, ...props }: Readonly<IconSvgProps>) => (
   <svg aria-hidden="true" focusable="false" height={size || height}  viewBox="0 0 24 24" width={size || width} {...props}>
     <path
       d="M12.62 20.81c-.34.12-.9.12-1.24 0C8.48 19.82 2 15.69 2 8.69 2 5.6 4.49 3.1 7.56 3.1c1.82 0 3.43.88 4.44 2.24a5.53 5.53 0 0 1 4.44-2.24C19.51 3.1 22 5.6 22 8.69c0 7-6.48 11.13-9.38 12.12Z"
@@ -57,7 +57,7 @@ export const HeartFilledIcon = ({ size = 24, width, height, ...props }: IconSvgP
   </svg>
 );
 
-export const SearchIcon = (props: IconSvgProps) => (
+export const SearchIcon = (props: Readonly<IconSvgProps>) => (
   <svg aria-hidden="true" fill="none" focusable="false" height="1em"  viewBox="0 0 24 24" width="1em" {...props}>
     <path
       d="M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z"
@@ -70,7 +70,7 @@ export const SearchIcon = (props: IconSvgProps) => (
   </svg>
 );
 
-export const PlusIcon: React.FC<IconSvgProps> = ({ size = 24, width, height, ...props }) => (
+export const PlusIcon: React.FC<Readonly<IconSvgProps>> = ({ size = 24, width, height, ...props }) => (
   <svg aria-hidden="true" fill="none" focusable="false" height={size || height}  viewBox="0 0 24 24" width={size || width} {...props}>
     <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}>
       <path d="M6 12h12" />
@@ -79,32 +79,32 @@ export const PlusIcon: React.FC<IconSvgProps> = ({ size = 24, width, height, ...
   </svg>
 );
 
-export const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }) => (
+export const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }: Readonly<IconSvgProps>) => (
   <svg aria-hidden="true" fill="none" focusable="false" height="1em"  viewBox="0 0 24 24" width="1em" {...otherProps}>
     <path d="m19.92 8.95-6.52 6.52c-.77.77-2.03.77-2.8 0L4.08 8.95" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit={10} strokeWidth={strokeWidth} />
   </svg>
 );
 
-export const VerticalDotsIcon: React.FC<IconSvgProps> = ({ size = 24, width, height, ...props }) => (
+export const VerticalDotsIcon: React.FC<Readonly<IconSvgProps>> = ({ size = 24, width, height, ...props }) => (
   <svg aria-hidden="true" fill="none" focusable="false" height={size || height}  viewBox="0 0 24 24" width={size || width} {...props}>
     <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 12c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="currentColor" />
   </svg>
 );
 
-export const ArrowLeftIcon = (props: React.SVGProps<SVGSVGElement>) => (
+export const ArrowLeftIcon = (props: Readonly<React.SVGProps<SVGSVGElement>>) => (
   <svg fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path d="M19 12H5M12 19l-7-7 7-7" />
   </svg>
 );
 
-export const FlagIcon = (props: React.SVGProps<SVGSVGElement>) => (
+export const FlagIcon = (props: Readonly<React.SVGProps<SVGSVGElement>>) => (
   <svg fill="none" height="24" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
     <line x1="4" x2="4" y1="22" y2="15" />
   </svg>
 );
 
-export const EditDocumentIcon = (props: React.SVGProps<SVGSVGElement>) => (
+export const EditDocumentIcon = (props: Readonly<React.SVGProps<SVGSVGElement>>) => (
   <svg aria-hidden="true" fill="none" focusable="false" height="1em"  viewBox="0 0 24 24" width="1em" {...props}>
     <path d="M15.48 3H7.52C4.07 3 2 5.06 2 8.52v7.95C2 19.94 4.07 22 7.52 22h7.95c3.46 0 5.52-2.06 5.52-5.52V8.52C21 5.06 18.93 3 15.48 3Z" fill="currentColor" opacity={0.4} />
     <path
@@ -126,7 +126,7 @@ export function EditIcon() {
   );
 }
 
-export const DeleteDocumentIcon = (props: React.SVGProps<SVGSVGElement>) => (
+export const DeleteDocumentIcon = (props: Readonly<React.SVGProps<SVGSVGElement>>) => (
   <svg aria-hidden="true" fill="none" focusable="false" height="1em"  viewBox="0 0 24 24" width="1em" {...props}>
     <path
       d="M21.07 5.23c-1.61-.16-3.22-.28-4.84-.37v-.01l-.22-1.3c-.15-.92-.37-2.3-2.71-2.3h-2.62c-2.33 0-2.55 1.32-2.71 2.29l-.21 1.28c-.93.06-1.86.12-2.79.21l-2.04.2c-.42.04-.72.41-.68.82.04.41.4.71.82.67l2.04-.2c5.24-.52 10.52-.32 15.82.21h.08c.38 0 .71-.29.75-.68a.766.766 0 0 0-.69-.82Z"
@@ -146,7 +146,7 @@ export const DeleteDocumentIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export const CalendarIcon: React.FC<IconSvgProps> = ({ size = 16, width, height, ...props }) => (
+export const CalendarIcon: React.FC<Readonly<IconSvgProps>> = ({ size = 16, width, height, ...props }) => (
   <svg aria-hidden="true" fill="none" focusable="false" height={size || height}  viewBox="0 0 24 24" width={size || width} {...props}>
     <path
       d="M19 4H5C3.89543 4 3 4.89543 3 6V20C3 21.1046 3.89543 22 5 22H19C20.1046 22 21 21.1046 21 20V6C21 4.89543 20.1046 4 19 4Z"
@@ -161,14 +161,14 @@ export const CalendarIcon: React.FC<IconSvgProps> = ({ size = 16, width, height,
   </svg>
 );
 
-export const ApplicationsIcon = (props: IconSvgProps) => (
+export const ApplicationsIcon = (props: Readonly<IconSvgProps>) => (
   <svg aria-hidden="true" fill="none" focusable="false" height="1em"  viewBox="0 0 24 24" width="1em" {...props}>
     <path d="M21 7v10c0 3-1.5 5-5 5H8c-3.5 0-5-2-5-5V7c0-3 1.5-5 5-5h8c3.5 0 5 2 5 5Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
     <path d="M14.5 4.5v2c0 1.1.9 2 2 2h2M8 13h4M8 17h8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" />
   </svg>
 );
 
-export const ContactIcon: React.FC<IconSvgProps> = ({ size = 15, width, height, ...props }) => (
+export const ContactIcon: React.FC<Readonly<IconSvgProps>> = ({ size = 15, width, height, ...props }) => (
   <svg aria-hidden="true" fill="none" focusable="false" height={size || height}  viewBox="0 0 24 24" width={size || width} {...props}>
     <path
       d="M17 3.5H7C4 3.5 2 5 2 8.5V15.5C2 19 4 20.5 7 20.5H17C20 20.5 22 19 22 15.5V8.5C22 5 20 3.5 17 3.5ZM17.47 9.59L14.34 12.09C13.68 12.62 12.84 12.88 12 12.88C11.16 12.88 10.31 12.62 9.66 12.09L6.53 9.59C6.21 9.33 6.16 8.85 6.41 8.53C6.67 8.21 7.14 8.15 7.46 8.41L10.59 10.91C11.35 11.52 12.64 11.52 13.4 10.91L16.53 8.41C16.85 8.15 17.33 8.2 17.58 8.53C17.84 8.85 17.79 9.33 17.47 9.59Z"
@@ -177,7 +177,7 @@ export const ContactIcon: React.FC<IconSvgProps> = ({ size = 15, width, height, 
   </svg>
 );
 
-export const AlertCircleIcon = ({ size = 24, width, height, className = "", ...props }: IconSvgProps) => (
+export const AlertCircleIcon = ({ size = 24, width, height, className = "", ...props }: Readonly<IconSvgProps>) => (
   <svg aria-hidden="true" className={className} fill="none" focusable="false" height={size || height} viewBox="0 0 24 24" width={size || width} {...props}>
     <path
       d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
@@ -191,7 +191,7 @@ export const AlertCircleIcon = ({ size = 24, width, height, className = "", ...p
   </svg>
 );
 
-export function FilterIcon(props: { size?: number; className?: string }) {
+export function FilterIcon(props: {readonly size?: number; readonly className?: string }) {
   return (
     <svg className={props.className} fill="none" height={props.size || 24} stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" width={props.size || 24}>
       <line x1="4" x2="20" y1="6" y2="6" />

@@ -15,21 +15,21 @@ const sortOptions = [
 ] satisfies { key: JobSortOrderKey; label: string }[];
 
 type JobFiltersModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  selectedCountries: string[];
-  onCountriesChange: (countries: string[]) => void;
-  availableCountries: string[];
-  isVerified: boolean;
-  onVerifiedChange: (isVerified: boolean) => void;
-  sortOrder: JobSortOrderKey;
-  onSortChange: (newOrder: JobSortOrderKey) => void;
-  selectedExperienceLevelNames: ExperienceLevel[];
-  onExperienceLevelChange: (experienceLevelNames: ExperienceLevel[]) => void;
-  experienceLevels: ExperienceLevel[];
-  jobCategories: JobCategoryName[];
-  selectedJobCategoryNames: JobCategoryName[];
-  onJobCategoryChange: (jobCategoryNames: JobCategoryName[]) => void;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
+  readonly selectedCountries: string[];
+  readonly onCountriesChange: (countries: string[]) => void;
+  readonly availableCountries: string[];
+  readonly isVerified: boolean;
+  readonly onVerifiedChange: (isVerified: boolean) => void;
+  readonly sortOrder: JobSortOrderKey;
+  readonly onSortChange: (newOrder: JobSortOrderKey) => void;
+  readonly selectedExperienceLevelNames: ExperienceLevel[];
+  readonly onExperienceLevelChange: (experienceLevelNames: ExperienceLevel[]) => void;
+  readonly experienceLevels: ExperienceLevel[];
+  readonly jobCategories: JobCategoryName[];
+  readonly selectedJobCategoryNames: JobCategoryName[];
+  readonly onJobCategoryChange: (jobCategoryNames: JobCategoryName[]) => void;
 };
 
 export function JobFiltersModal({

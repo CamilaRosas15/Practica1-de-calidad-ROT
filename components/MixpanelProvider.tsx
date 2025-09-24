@@ -12,7 +12,7 @@ import { API } from "@/lib/constants/apiRoutes";
 import { trackPageViewAction } from "@/app/actions/trackPageViewAction";
 
 type MixpanelProviderProps = {
-  children: ReactNode;
+  readonly children: ReactNode;
 };
 
 export function MixpanelProvider({ children }: MixpanelProviderProps) {

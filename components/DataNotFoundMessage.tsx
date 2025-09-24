@@ -4,9 +4,9 @@ import mixpanel from "mixpanel-browser";
 import { AlertCircleIcon } from "./icons";
 
 type DataNotFoundMessageProps = {
-  title?: string;
-  message?: string;
-  className?: string;
+  readonly title?: string;
+  readonly message?: string;
+  readonly className?: string;
 };
 
 export function DataNotFoundMessage({ title = "No results found", message = "We couldn't find what you're looking for.", className }: DataNotFoundMessageProps) {

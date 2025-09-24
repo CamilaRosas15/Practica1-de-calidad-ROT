@@ -3,9 +3,9 @@
 import { Select, SelectItem } from "@heroui/react";
 
 type CountryFilterProps = {
-  onCountriesChange: (countries: string[]) => void;
-  selectedCountries: string[];
-  availableCountries: string[];
+  readonly onCountriesChange: (countries: string[]) => void;
+  readonly selectedCountries: string[];
+  readonly availableCountries: string[];
 };
 
 export function CountryFilter({ onCountriesChange, selectedCountries, availableCountries }: CountryFilterProps) {

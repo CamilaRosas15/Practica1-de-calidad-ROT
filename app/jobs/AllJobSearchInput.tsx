@@ -17,8 +17,8 @@ import { JobSortOrderKey, nuqsJobSearchParamSchema } from "@/lib/schema/nuqsJobS
 import { createFilterValidCountries, filterValidExperienceLevels, filterValidJobCategories, getValidOrDefaults } from "@/lib/nuqsJobSearchParamFilter";
 
 type AllJobSearchInputProps = {
-  search: string;
-  onSearchChange: (newSearch: string) => void;
+  readonly search: string;
+  readonly onSearchChange: (newSearch: string) => void;
 };
 
 export function AllJobSearchInput({ search, onSearchChange }: AllJobSearchInputProps) {
