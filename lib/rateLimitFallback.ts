@@ -19,9 +19,9 @@ const sustainedCache = new LRUCache<string, number[]>({
 
 export class FallbackRateLimiter {
   constructor(
-    private routeType: RateLimitRouteType,
-    private window: WindowType,
-    private operation: OperationType,
+    private readonly routeType: RateLimitRouteType,
+    private readonly window: WindowType,
+    private readonly operation: OperationType,
   ) {}
 
   async limit(key: string) {
