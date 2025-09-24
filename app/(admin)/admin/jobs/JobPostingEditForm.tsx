@@ -56,6 +56,7 @@ export function JobPostingEditForm({
       toast.success("Job posting updated successfully");
       onClose();
     } catch (error) {
+      console.error("Failed to update job posting:", error);
       toast.error("Failed to update job posting");
     }
   };

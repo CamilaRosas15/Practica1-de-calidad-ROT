@@ -295,8 +295,8 @@ export function HomePage() {
 
     mixpanel.track("Home Page FAQ Item Selected", {
       faq_title: faqTitle,
-      opening_tab: isOpen ? true : false,
-      closing_tab: isOpen ? false : true,
+      opening_tab: isOpen,     
+      closing_tab: !isOpen,     
     });
   };
 

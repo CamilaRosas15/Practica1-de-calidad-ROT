@@ -6,6 +6,7 @@ export function extractDomain(url: string): string {
 
     return hostname.replace(/^www\./, "");
   } catch (error) {
+    console.error("Invalid URL provided:", error);
     return "";
   }
 }

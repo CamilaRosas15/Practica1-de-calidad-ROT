@@ -120,9 +120,17 @@ export function MixpanelProvider({ children }: MixpanelProviderProps) {
 
       const cookieDeviceId = (await getCookieAction(MIXPANEL_COOKIE_NAME)) ?? "noCookieDeviceId";
 
-      const device_id_status =
-        deviceId === cookieDeviceId ? "synced" : deviceId === "unknownDeviceId" ? "missing_mixpanel_device_id" : cookieDeviceId === "noCookieDeviceId" ? "missing_cookie" : "mismatch_cookie";
+      let device_id_status: string;
 
+      if (deviceId === cookieDeviceId) {
+        device_id_status = "synced";
+      } else if (deviceId === "unknownDeviceId") {
+        device_id_status = "missing_mixpanel_device_id";
+      } else if (cookieDeviceId === "noCookieDeviceId") {
+        device_id_status = "missing_cookie";
+      } else {
+        device_id_status = "mismatch_cookie";
+      }
       // 1) Track page view using server action
       trackPageViewAction({
         path: pathname,

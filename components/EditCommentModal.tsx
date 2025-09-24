@@ -29,6 +29,7 @@ export function EditCommentModal({ isOpen, onClose, onSubmit, isUpdating, initia
       await onSubmit(data.content);
       onClose();
     } catch (error) {
+      console.error("Failed to update comment:", error); 
       toast.error("Failed to update comment");
     }
   };
