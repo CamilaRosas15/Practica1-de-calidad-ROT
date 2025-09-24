@@ -28,7 +28,7 @@ export const viewport: Viewport = {
   ],
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: {readonly children: React.ReactNode }) {
   if (process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "true") {
     return (
       <html lang="en">

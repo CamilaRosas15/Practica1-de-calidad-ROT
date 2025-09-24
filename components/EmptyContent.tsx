@@ -1,10 +1,10 @@
 import { title } from "./primitives";
 
 type EmptyStateProps = {
-  heading?: string;
-  message?: string;
-  className?: string;
-  padding?: string;
+  readonly heading?: string;
+  readonly message?: string;
+  readonly className?: string;
+  readonly padding?: string;
 };
 
 export function EmptyContent({ heading = "No items found", message = "Nothing to display at the moment", className = "min-h-[100px]", padding = "py-4 sm:py-12" }: EmptyStateProps) {

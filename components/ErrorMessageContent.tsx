@@ -7,8 +7,8 @@ import { AlertCircleIcon } from "@/components/icons";
 import { CustomButton } from "@/components/CustomButton";
 
 type ErrorMessageContentProps = {
-  title?: string;
-  message: string;
+  readonly title?: string;
+  readonly message: string;
 };
 
 export function ErrorMessageContent({ title = "Error", message }: ErrorMessageContentProps) {

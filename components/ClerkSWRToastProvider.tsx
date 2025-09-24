@@ -8,7 +8,7 @@ import { SWRConfig } from "swr";
 
 import { APINotFoundError } from "@/lib/errorHandling";
 
-export function ClerkSWRToastProvider({ children }: { children: React.ReactNode }) {
+export function ClerkSWRToastProvider({ children }: { readonly children: React.ReactNode }) {
   const { theme } = useTheme();
 
   return (

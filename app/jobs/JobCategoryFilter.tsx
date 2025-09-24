@@ -1,9 +1,9 @@
 import { Select, SelectItem } from "@heroui/react";
 
 type JobCategoryFilterProps = {
-  onJobCategoryChange: (categoryNames: JobCategoryName[]) => void;
-  selectedJobCategoryNames: JobCategoryName[];
-  jobCategories: JobCategoryName[];
+  readonly onJobCategoryChange: (categoryNames: JobCategoryName[]) => void;
+  readonly selectedJobCategoryNames: JobCategoryName[];
+  readonly jobCategories: JobCategoryName[];
 };
 
 export function JobCategoryFilter({ onJobCategoryChange, selectedJobCategoryNames, jobCategories }: JobCategoryFilterProps) {

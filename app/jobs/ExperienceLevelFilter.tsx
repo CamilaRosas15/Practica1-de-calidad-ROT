@@ -1,9 +1,9 @@
 import { Select, SelectItem } from "@heroui/react";
 
 type ExperienceLevelFilterProps = {
-  onExperienceLevelChange: (experienceLevelNames: ExperienceLevel[]) => void;
-  selectedExperienceLevelNames: ExperienceLevel[];
-  experienceLevels: ExperienceLevel[];
+  readonly onExperienceLevelChange: (experienceLevelNames: ExperienceLevel[]) => void;
+  readonly selectedExperienceLevelNames: ExperienceLevel[];
+  readonly experienceLevels: ExperienceLevel[];
 };
 
 export function ExperienceLevelFilter({ onExperienceLevelChange, selectedExperienceLevelNames, experienceLevels }: ExperienceLevelFilterProps) {

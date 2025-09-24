@@ -7,8 +7,8 @@ import mixpanel from "mixpanel-browser";
 import { CustomButton } from "@/components/CustomButton";
 
 type VerifiedJobsToggleProps = {
-  isVerified: boolean;
-  onVerifiedChange: (isVerified: boolean) => void;
+  readonly isVerified: boolean;
+  readonly onVerifiedChange: (isVerified: boolean) => void;
 };
 
 export function VerifiedJobsToggle({ isVerified, onVerifiedChange }: VerifiedJobsToggleProps) {

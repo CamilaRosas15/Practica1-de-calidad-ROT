@@ -9,11 +9,11 @@ import { addCommentSchema, AddCommentFormValues } from "@/lib/schema/addCommentS
 import { CustomButton } from "@/components/CustomButton";
 
 type EditCommentModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (content: string) => Promise<void>;
-  isUpdating: boolean;
-  initialContent: string;
+  readonly isOpen: boolean;
+  readonly onClose: () => void;
+  readonly onSubmit: (content: string) => Promise<void>;
+  readonly isUpdating: boolean;
+  readonly initialContent: string;
 };
 
 export function EditCommentModal({ isOpen, onClose, onSubmit, isUpdating, initialContent }: EditCommentModalProps) {

@@ -13,19 +13,19 @@ import { LoadingContent } from "@/components/LoadingContent";
 import { nuqsJobSearchParamSchema } from "@/lib/schema/nuqsJobSearchParamSchema";
 
 type ButtonProps = {
-  label: string;
-  onClick?: () => void;
-  color?: "primary" | "default";
-  variant?: "flat" | "light";
-  className?: string;
-  children?: React.ReactNode;
+  readonly label: string;
+  readonly onClick?: () => void;
+  readonly color?: "primary" | "default";
+  readonly variant?: "flat" | "light";
+  readonly className?: string;
+  readonly children?: React.ReactNode;
 };
 
 type ResponsiveAlertProps = {
-  title: string;
-  description?: string;
-  primaryButton: ButtonProps;
-  secondaryButton?: ButtonProps;
+  readonly title: string;
+  readonly description?: string;
+  readonly primaryButton: ButtonProps;
+  readonly secondaryButton?: ButtonProps;
 };
 
 export function ResponsiveAlert({ title, description, primaryButton, secondaryButton }: ResponsiveAlertProps) {
