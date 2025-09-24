@@ -78,7 +78,7 @@ export default function MyApplicationsPage() {
                     <Link
                       className="inline text-sm text-blue-600 hover:underline"
                       href={`/company/${application.job_posting.company.id}`}
-                      onClick={() => mixpanelTrackCompanyNameClick(application.job_posting.company.id)}
+                      onPress={() => mixpanelTrackCompanyNameClick(application.job_posting.company.id)}
                     >
                       {application.job_posting.company.company_name}
                     </Link>
