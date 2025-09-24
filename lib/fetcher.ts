@@ -23,7 +23,7 @@ export const fetcher = async <T = any>(resource: RequestInfo, init?: RequestInit
         status: response.status,
       });
 
-      throw new Error(ERROR_MESSAGES.TOO_MANY_REQUESTS) as RateLimitError;
+      throw new RateLimitError(ERROR_MESSAGES.TOO_MANY_REQUESTS);
     }
     throw new Error(`HTTP error! status: ${response.status}`);
   }

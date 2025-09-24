@@ -14,7 +14,7 @@ import { CreateCompanyModal } from "./CreateCompanyModal";
 import { PlusIcon, SearchIcon, ChevronDownIcon } from "@/components/icons";
 import { fetcher } from "@/lib/fetcher";
 import { API } from "@/lib/constants/apiRoutes";
-import { isRateLimitError } from "@/lib/errorHandling";
+import { RateLimitError } from "@/lib/errorHandling";
 import { RateLimitErrorMessage } from "@/components/RateLimitErrorMessage";
 import { LoadingContent } from "@/components/LoadingContent";
 import { ErrorMessageContent } from "@/components/ErrorMessageContent";
@@ -245,7 +245,7 @@ export function TableCompanyContent() {
 
   // Handle rate limit error
   if (error) {
-    if (isRateLimitError(error)) {
+    if (error instanceof RateLimitError) {
       return <RateLimitErrorMessage />;
     }
 
